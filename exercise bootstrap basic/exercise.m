@@ -28,7 +28,7 @@ N_obs_sample = 500;
 % 4.4. Draw a sample from the population
 data_sample = datasample(data_population,N_obs_sample,'Replace',false);
 
-%% 5. Draw (bootsrap) samples from the sample 
+%% 5. Draw (bootsrap) samples with replacement from the sample 
 
 % 5.1. Preallocate vector to store the means of bootstrap samples
 means_data_samples_bootstrap = NaN(N_sim,1);
