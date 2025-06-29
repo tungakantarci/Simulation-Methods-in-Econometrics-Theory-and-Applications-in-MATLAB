@@ -30,7 +30,7 @@ data_sample = datasample(data_population,N_obs_sample,'Replace',false);
 
 %% 5. Draw (bootsrap) samples with replacement from the sample 
 
-% 5.1. Preallocate vector to store the means of bootstrap samples
+% 5.1. Preallocate vector to store (bootsrap) sample means
 means_data_samples_bootstrap = NaN(N_sim,1);
 
 % 5.2. Draw samples with replacement and compute the sample mean each time
@@ -42,7 +42,7 @@ end
 
 %% 6. Draw samples from the population
 
-% 6.1. Preallocate vector to store means of samples from the population
+% 6.1. Preallocate vector to store sample means
 means_data_samples_population = NaN(N_sim,1);
 
 % 6.2. Draw samples and compute the sample mean each time
