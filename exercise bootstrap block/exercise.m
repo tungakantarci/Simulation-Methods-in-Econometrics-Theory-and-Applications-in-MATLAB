@@ -23,7 +23,7 @@ N_obs_pop = 100000;
 phi = 0.7;
 
 % 4.3. Generate white noise innovations
-varepsilon = random('Normal',0,1,[N_obs_pop, 1]);
+varepsilon = random('Normal',0,1,[N_obs_pop,1]);
 
 % 4.4. Simulate AR(1) time‑series data
 data_pop = filter(1,[1 -phi],varepsilon);
@@ -41,7 +41,7 @@ title('Fig. 1. First 1000 Points of the AR(1) Series');
 N_obs_sample = 5000;
 
 % 6.2. Randomly select a starting index for sampling
-start_idx = random('Discrete Uniform',N_obs_pop-N_obs_sample+1); % Ensures sample fits within bounds of data_pop
+start_idx = random('Discrete Uniform',N_obs_pop-N_obs_sample+1,[1,1]); % Ensures sample fits within bounds of data_pop
 
 % 6.3. Draw one contiguous sample from the population
 data_sample = data_pop(start_idx:start_idx+N_obs_sample-1); % Draw a block of consecutive data points from the population
@@ -77,7 +77,7 @@ means_data_samples_pop = NaN(N_sim,1);
 
 % 8.2. Draw samples from the population and compute the sample mean each time
 for i = 1:N_sim
-    start_idx = random('Discrete Uniform',N_obs_pop-N_obs_sample+1); 
+    start_idx = random('Discrete Uniform',N_obs_pop-N_obs_sample+1,[1,1]); 
     data_samples_pop = data_pop(start_idx:start_idx+N_obs_sample-1);
     means_data_samples_pop(i) = mean(data_samples_pop);
 end
