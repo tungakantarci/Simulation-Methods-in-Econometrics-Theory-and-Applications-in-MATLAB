@@ -20,13 +20,13 @@ N_sim = 5000;
 N_obs_pop = 10000;
 
 % 4.2. Generate data for the independent variable
-X_pop = random('Uniform',-1,1,[N_obs_pop 1]);
+X_pop = random('Uniform',-1,1,[N_obs_pop,1]);
 
 % 4.3. Heteroskedasticity parameter 
 Gamma = 1.5; 
 
 % 4.4. Generate error
-u_pop = random('Normal',0,exp(X_pop*Gamma),[N_obs_pop 1]);
+u_pop = random('Normal',0,exp(X_pop*Gamma),[N_obs_pop,1]);
 
 % 4.5. Set true beta of the model
 B_true = 0.5; 
@@ -55,7 +55,7 @@ N_obs_sample = 500;
 % 6.2. Draw a sample from the population
 data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
 
-%% 7. Draw (bootstrap) samples from the sample 
+%% 7. Draw (bootstrap) samples from the original sample 
 
 % 7.1. Create y and X
 y = data_sample(:,1);
@@ -76,7 +76,7 @@ B_hats_data_samples_boot = NaN(N_sim,1);
 
 % 7.6. Draw samples using residual multipliers and compute the coefficient estimate each time
 for i = 1:N_sim
-    v = random('Normal',0,1,[N_obs_sample 1]); % N(0,1) multipliers
+    v = random('Normal',0,1,[N_obs_sample,1]); % N(0,1) multipliers
     % v = 2*(rand(N_obs_sample,1) > 0.5)-1; % Rademacher multipliers
     y_boot = X*B_hat+(u_hat./sqrt(1-h)).*v; % u_hat./sqrt(1-h) is the HC2 adjustment applied to residuals
     LSS = exercisefunctionlss(y_boot,X); 
