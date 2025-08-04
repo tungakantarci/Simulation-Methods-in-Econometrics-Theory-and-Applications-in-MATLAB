@@ -20,13 +20,13 @@ N_sim = 5000;
 N_obs_pop = 10000;
 
 % 4.2. Generate data for the independent variable
-X_pop = [random('Uniform',-1,1,[N_obs_pop 1])];
+X_pop = [random('Uniform',-1,1,[N_obs_pop,1])];
 
 % 4.3. Heteroskedasticity parameter 
 Gamma = 1.5; 
 
 % 4.4. Generate error
-u_pop = random('Normal',0,exp(X_pop*Gamma),[N_obs_pop 1]);
+u_pop = random('Normal',0,exp(X_pop*Gamma),[N_obs_pop,1]);
 
 % 4.5. Set true beta of the model
 B_true = 0.5; 
@@ -61,7 +61,7 @@ data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
 % 7.1. Preallocate vector to store coefficient estimates
 B_hats_data_samples_boot = NaN(N_sim,1);
 
-% 7.2. Draw samples from the sample and compute the coefficient estimate each time 
+% 7.2. Draw samples from the original sample and compute the coefficient estimate each time 
 for i = 1:N_sim
     data_samples_boot = datasample(data_sample,N_obs_sample,'Replace',true);
     y = data_samples_boot(:,1);
