@@ -71,7 +71,7 @@ for i = 1:N_sim
     B_hats_data_samples_boot(:,i) = LSS.B_hat;
 end
 
-%% 7. Estimate cluster-robust SEs using the bootsrap resampling
+%% 7. Estimate cluster-robust SEs using bootsrap resampling
 
 % 7.1. Mean of the bootstrap sampling distribution of coefficient estimates
 bootstrap_mean = mean(B_hats_data_samples_boot,2);
@@ -146,3 +146,4 @@ cluster_df_correction = (N_obs-1)/(N_obs-N_k)*(N_clusters/(N_clusters-1));
 
 % 12.3. Compute cluster-robust SEs using the sandwich formula
 cluster_robust_SE = cluster_df_correction*sqrt(diag(inv(XTX_sum)*M_sum*inv(XTX_sum))); % Sandwich formula: sqrt(diag(correction_factor*(X'X)^(-1)*meat*(X'X)^(-1)))
+
