@@ -1,7 +1,12 @@
 % Exercise - Understanding the method of wild bootstrap
 
-%% 1. Aim of the Exercise
-% To learn about the method of wild bootstrap.
+%% 1. Aim of the exercise
+% To understand how to correctly estimate standard errors of regression
+% coefficients when the error variance is heteroskedastic. Standard
+% bootstrap methods can produce misleading inference under
+% heteroskedasticity. We use the wild bootstrap, which perturbs residuals
+% using random multipliers, to improve robustness and compare its
+% performance to sampling directly from the population.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
