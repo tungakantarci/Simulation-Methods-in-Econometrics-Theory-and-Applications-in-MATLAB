@@ -1,7 +1,12 @@
 % Exercise - Understanding the method of paired bootstrap
 
 %% 1. Aim of the exercise
-% To learn about the method of paired bootstrap.
+% To understand how to correctly estimate standard errors of regression
+% coefficients when the error variance is not constant (i.e.,
+% heteroskedasticity is present). Standard inference methods can be
+% misleading in such cases. We use the paired bootstrap method, which
+% resamples observations as (y, X) pairs, to account for heteroskedasticity
+% and compare its performance to sampling directly from the population.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
