@@ -1,7 +1,12 @@
 % Exercise - Understanding the method of block bootstrap
 
 %% 1. Aim of the exericse 
-% To learn about the method of block bootstrap.
+% To understand how to correctly estimate the sampling distribution of a
+% statistic (e.g., the sample mean) when data are serially correlated, such
+% as in time-series settings. Standard bootstrap methods assume independent
+% observations and can lead to biased inference. We use the block bootstrap
+% method to account for dependence across observations and compare its
+% performance to sampling directly from the population.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
