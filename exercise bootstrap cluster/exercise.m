@@ -1,9 +1,11 @@
 % Exercise - Understanding the method of cluster bootstrap
 
-%% 1. Aim of the exercise  
-% To learn how to estimate regression coefficients and their standard
-% errors using two complementary methods: bootstrap resampling of clusters
-% and analytical cluster-robust estimation using the sandwich formula.
+%% 1. Aim of the exercise
+% To understand how to correctly estimate standard errors of regression
+% coefficients when observations are clustered (e.g., by country), which
+% can lead to biased inference if ignored. We compare two methods for
+% addressing this issue: (i) bootstrap resampling of clusters, and (ii)
+% analytical cluster-robust estimation using the sandwich formula.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
