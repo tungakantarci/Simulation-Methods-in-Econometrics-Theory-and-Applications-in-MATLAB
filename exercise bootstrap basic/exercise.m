@@ -1,7 +1,11 @@
-% Exercise - Understanding the method of basic bootsrap
+% Exercise - The method of basic bootsrap
 
-%% 1. Aim of the exericse 
-% To learn about the method of basic bootstrap.
+%% 1. Aim of the exercise
+% To understand how to correctly estimate the sampling distribution of a
+% statistic (e.g., the sample mean) when the population distribution is
+% unknown. We compare two approaches: (i) bootstrap resampling from the
+% sample, and (ii) repeated sampling from the full population, to evaluate
+% how well the bootstrap approximates the true distribution.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
