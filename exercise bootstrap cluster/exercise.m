@@ -43,7 +43,7 @@ B_hats_data_samples_boot = NaN(N_k,N_sim);
 % 6.2 Bootstrap: Sample clusters with replacement and compute coef. estimates
 for i = 1:N_sim
     % Randomly sample clusters with replacement
-    idx = random('Discrete Uniform',N_clusters,[N_clusters,1]); % Or idx = randi(N_clusters,N_clusters,1);
+    idx = random('Discrete Uniform',N_clusters,[N_clusters,1]); % Or idx = randi([1,N_clusters],[N_clusters,1]);
     sampled_clusters = unique_clusters(idx);
 
     % Initialize cell array to store data for the selected cluster
