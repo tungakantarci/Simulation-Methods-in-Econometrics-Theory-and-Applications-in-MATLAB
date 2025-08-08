@@ -1,4 +1,4 @@
-% Exercise - Understanding Monte Carlo integration using identity function
+% Exercise - Monte Carlo integration of identity function
 
 %% 1. Aim of the exercise
 % To understand Monte Carlo (MC) integration by estimating the area under
@@ -12,10 +12,10 @@
 % 3.1. Clear the memory 
 clear;
 
-% 3.2. Define the number of samples (draws)
-N_samples = 1000; 
+% 3.2. Define the number of samples
+N_samples = 1000; % 'Samples' refer to random draws from target dist.
 
-%% 4. Monte Carlo integral estimatation
+%% 4. Monte Carlo integration: Estimating integrals via sampling
 
 % 4.1. Generate random samples from a uniform distribution on [0, 1]
 uniform_samples = random('Uniform',0,1,[N_samples,1]);
@@ -23,37 +23,45 @@ uniform_samples = random('Uniform',0,1,[N_samples,1]);
 % 4.2. MC estimate of the integral of f(x) = x over [0,1]
 integral_estimate = mean(uniform_samples);
 
-%% 5. The true value of the integral of the identity function from 0 to 1
+% Averaging f(x) = x over random values in [0,1] gives an estimate of the
+% integral.
+
+%% 5. The true value of the integral of the identity function over [0,1]
 
 integral_true_value = 0.5; 
 
 %% 6. Geometric interpretation of MC integration
 
 % We sample random points (x,y) uniformly in the unit square [0,1] × [0,1].
-% Each x-value (uniform_samples) is treated as a fixed input to the
-% function f(x) = x. Each y-value (from y_samples) is an independent random
-% vertical coordinate. We do bot compute f(x) directly. Instead, we test
-% whether y < f(x). Points satisfying y < x lie below the curve and
-% contribute to the area estimate. The fraction of such points approximates
-% the integral of f(x) = x over [0,1].
+% Each x-value (from x_samples) is treated as a fixed input to the function
+% f(x) = x. Each y-value (from y_samples) is an independent random vertical
+% coordinate. We do bot compute f(x) directly. Instead, we test whether y <
+% f(x). Points satisfying y < x lie below the curve and contribute to the
+% area estimate. The fraction of such points approximates the integral of
+% f(x) = x over [0,1].
 
-% 6.1. Create (x,y) points in the unit square
-y_samples = random('Uniform',0,1,[N_samples,1]);
+% 6.1 Create (x,y) points in the unit square
+
+% Sample y-coordinates uniformly in [0,1]
+y_samples = random('Uniform',0,1,[N_samples,1]); 
+
+% Sample x-coordinates uniformly in [0,1]
+x_samples = uniform_samples; 
 
 % 6.2. Identify points below the diagonal y < x
-below_diagonal = y_samples < uniform_samples; % Checks whether a sample lies below diagonal
+below_diagonal = y_samples < x_samples; 
 
-% 6.3. Visual demonstration of MC integration
+% 6.3. Visualizing area estimation via Monte Carlo sampling
 figure
 hold on
-scatter(uniform_samples,y_samples,'ro') % All samples
-scatter(uniform_samples(below_diagonal),y_samples(below_diagonal), ...
+scatter(x_samples,y_samples,'ro') % All samples
+scatter(x_samples(below_diagonal),y_samples(below_diagonal), ...
     'o','MarkerEdgeColor','r','MarkerFaceColor',[0.9 0.9 0.9]); % Samples below diagonal
-plot([0 1],[0 1],'k') % Diagonal line y = x
-ylabel('y')
+plot([0 1],[0 1]) % Diagonal line y = x
+title('Fig. 1. Monte Carlo integration: Area under f(x) = x')
 xlabel('x')
+ylabel('y')
 legend('All samples','Samples below diagonal','y = x')
-title('Fig. 1. Monte Carlo Integration: Area under f(x) = x')
 hold off
 
 %% 7. Convergence behavior of MC estimate
@@ -99,10 +107,10 @@ figure
 hold on
 plot(1:N_samples,convergence_integral_estimate,'b','DisplayName','MC integral estimate');
 yline(integral_true_value,'DisplayName','True integral value');
-ylabel('Integral estimate');
-xlabel('Number of samples (draws)');
-legend('show');
 title('Fig. 2. Convergence of Monte Carlo estimate');
+xlabel('Number of samples (draws)');
+ylabel('Integral estimate');
+legend('show');
 hold off
 
 % 8.2. Plot convergence of MC estimation error metrics
@@ -110,8 +118,8 @@ figure
 hold on
 plot(1:N_samples,convergence_MSE,'r','DisplayName','MSE of MC estimate');
 plot(1:N_samples,theoretical_error_decay,'g','DisplayName','Theoretical error decay');
-ylabel('Integral estimate error metrics');
-xlabel('Number of samples (draws)');
-legend('show');
 title('Fig. 3. Convergence of MC estimation error metrics')
+xlabel('Number of samples (draws)');
+ylabel('Integral estimate error metrics');
+legend('show');
 hold off
