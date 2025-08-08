@@ -17,15 +17,16 @@ LSS.R2_uc             = 1-LSS.RSS/LSS.TSS;
 LSS.Mi                = eye(LSS.N)-ones(LSS.N)./LSS.N;
 LSS.TSS_c             = y'*LSS.Mi*y;
 LSS.R2_c              = 1-LSS.RSS/LSS.TSS_c; 	
-%% The estimator of the variance of the regression error
+%% Estimator of the variance of the regression error
 LSS.sigma_hat_squared = LSS.RSS/(LSS.N-LSS.K); % It is also called the "mean squared error".
 LSS.sigma_hat         = sqrt(LSS.sigma_hat_squared); % This is an estimator of the standard deviation of the regression error. It is called the standard error of the regression. It is also referred to as the "root mean squred error".
-%% The variance-covariance estimator of the OLS estimator 
+%% Variance-covariance estimator of OLS estimator 
 LSS.B_hat_VCE         = inv(X'*X)*X'* ...
-                        (1/(LSS.N-LSS.K)*LSS.u_hat'*LSS.u_hat.*eye(LSS.N))* ...
+                        (1/(LSS.N-LSS.K)* ...
+                        LSS.u_hat'*LSS.u_hat.*eye(LSS.N))* ...
                         X*inv(X'*X); % In principle just (1/(LSS.N-LSS.K))*LSS.u_hat'*LSS.u_hat.*inv(X'*X). The second term is the RSS. The first two terms together is the sigma hat squared. inv(X'*X)*X'*X is redundant but added so that this estimator can be compared to the robust estimator below to see how they differ. 
 LSS.B_hat_SEE	      = sqrt(diag(LSS.B_hat_VCE));
-%% The variance-covariance estimator of the OLS estimator robust to heteroskedasticity
+%% Variance-covariance estimator of OLS estimator robust to heteroskedasticity
 LSS.B_hat_VCE_robust  = inv(X'*X)*X'* ... 
                         (LSS.u_hat.*LSS.u_hat.*eye(LSS.N))* ... % Note the dot product .* here.
                         X*inv(X'*X)* ...
