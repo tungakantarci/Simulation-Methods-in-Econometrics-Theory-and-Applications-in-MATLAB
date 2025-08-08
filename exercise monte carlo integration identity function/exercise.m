@@ -13,7 +13,7 @@
 clear;
 
 % 3.2. Define the number of samples
-N_samples = 1000; % 'Samples' refer to random draws from target dist.
+N_samples = 1000; % Samples: random draws from target distribution
 
 %% 4. Monte Carlo integration: Estimating integrals via sampling
 
@@ -35,18 +35,15 @@ integral_true_value = 0.5;
 % We sample random points (x,y) uniformly in the unit square [0,1] × [0,1].
 % Each x-value (from x_samples) is treated as a fixed input to the function
 % f(x) = x. Each y-value (from y_samples) is an independent random vertical
-% coordinate. We do bot compute f(x) directly. Instead, we test whether y <
+% coordinate. We do not compute f(x) directly. Instead, we test whether y <
 % f(x). Points satisfying y < x lie below the curve and contribute to the
 % area estimate. The fraction of such points approximates the integral of
 % f(x) = x over [0,1].
 
-% 6.1 Create (x,y) points in the unit square
-
-% Sample y-coordinates uniformly in [0,1]
-y_samples = random('Uniform',0,1,[N_samples,1]); 
-
-% Sample x-coordinates uniformly in [0,1]
-x_samples = uniform_samples; 
+% 6.1 Create (x, y) points uniformly in the unit square
+x_samples = uniform_samples; % x-coordinates sampled uniformly in [0,1]
+y_samples = random('Uniform',0,1, ...
+    [N_samples,1]); % y-coordinates sampled independently in [0,1]
 
 % 6.2. Identify points below the diagonal y < x
 below_diagonal = y_samples < x_samples; 
@@ -56,7 +53,8 @@ figure
 hold on
 scatter(x_samples,y_samples,'ro') % All samples
 scatter(x_samples(below_diagonal),y_samples(below_diagonal), ...
-    'o','MarkerEdgeColor','r','MarkerFaceColor',[0.9 0.9 0.9]); % Samples below diagonal
+    'o','MarkerEdgeColor','r','MarkerFaceColor', ...
+    [0.9 0.9 0.9]); % Samples below diagonal
 plot([0 1],[0 1]) % Diagonal line y = x
 title('Fig. 1. Monte Carlo integration: Area under f(x) = x')
 xlabel('x')
@@ -78,7 +76,8 @@ convergence_integral_estimate = cumsum(uniform_samples)./(1:N_samples)';
 % [0,1]) due to the law of large numbers.
 
 % 7.2. MSE of MC integral estimate as sample size increases
-convergence_MSE = cumsum((uniform_samples-integral_true_value).^2)./(1:N_samples)';
+convergence_MSE = cumsum((uniform_samples-integral_true_value).^2) ...
+    ./(1:N_samples)';
 
 % Each term (xi-true_value)^2 measures the squared error of a sample
 % relative to the true integral. cumsum accumulates these squared errors,
@@ -92,20 +91,22 @@ convergence_MSE = cumsum((uniform_samples-integral_true_value).^2)./(1:N_samples
 theoretical_error_decay = 1./sqrt(1:N_samples);
 
 % The MC error typically decreases proportionally to 1/sqrt(N) as the
-% number of samples N increases. Hence, this line shows how fast we expect
-% the error to decay with sample size. The MC error decreases roughly like
-% 1/sqrt(N) because we're averaging N random samples. Each sample has some
-% variance, and averaging reduces that variance by a factor of 1/N. The
-% typical error (standard deviation) is the square root of the variance,
-% hence 1/sqrt(N). This comes from the Central Limit Theorem and how
-% variance behaves when averaging.
+% number of samples N increases. This line illustrates how fast we expect
+% the error to decay with sample size. The reason: each sample has some
+% variance, and averaging N samples reduces that variance by a factor of
+% 1/N. The standard deviation (i.e., typical error) is the square root of
+% the variance, hence it decays as 1/sqrt(N). This behavior arises from the
+% Central Limit Theorem, which states that the distribution of the sample
+% mean approaches a normal distribution as N increases, with variance
+% decreasing as 1/N.
 
 %% 8. Visualize the convergence behavior of the MC estimate and its error
 
 % 8.1. Plot convergence of MC estimate 
 figure
 hold on
-plot(1:N_samples,convergence_integral_estimate,'b','DisplayName','MC integral estimate');
+plot(1:N_samples,convergence_integral_estimate,'b','DisplayName', ...
+    'MC integral estimate');
 yline(integral_true_value,'DisplayName','True integral value');
 title('Fig. 2. Convergence of Monte Carlo estimate');
 xlabel('Number of samples (draws)');
@@ -117,7 +118,8 @@ hold off
 figure
 hold on
 plot(1:N_samples,convergence_MSE,'r','DisplayName','MSE of MC estimate');
-plot(1:N_samples,theoretical_error_decay,'g','DisplayName','Theoretical error decay');
+plot(1:N_samples,theoretical_error_decay,'g','DisplayName', ...
+    'Theoretical error decay');
 title('Fig. 3. Convergence of MC estimation error metrics')
 xlabel('Number of samples (draws)');
 ylabel('Integral estimate error metrics');
