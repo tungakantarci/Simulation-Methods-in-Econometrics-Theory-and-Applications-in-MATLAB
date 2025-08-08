@@ -1,4 +1,4 @@
-% Empirical exercise - Function - Least squares statistics - Robust
+% Exercise - Function - Least squares statistics - Robust
 
 function LSS = exercisefunctionlssrobust(y,X)  
 %% Number of observations and column dimension of X
