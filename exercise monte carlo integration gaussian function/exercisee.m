@@ -72,3 +72,4 @@ xlabel('Number of samples (draws)');
 ylabel('Mean Squared Error');
 legend('show');
 hold off
+
