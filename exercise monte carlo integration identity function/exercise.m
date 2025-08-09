@@ -9,11 +9,11 @@
 
 %% 3. Define the number of samples 
 
-% 3.1. Clear the memory 
+% 3.1. Clear workspace and memory
 clear;
 
-% 3.2. Define the number of samples
-N_samples = 1000; % Samples: random draws from target distribution
+% 3.2. Set number of random samples for estimation
+N_samples = 1000; % Number of random draws from the target distribution
 
 %% 4. Monte Carlo integration: Estimating integrals via sampling
 
@@ -62,9 +62,9 @@ ylabel('y')
 legend('All samples','Samples below diagonal','y = x')
 hold off
 
-%% 7. Convergence behavior of MC estimate
+%% 7. Convergence behavior of the MC integral estimate
 
-% 7.1. MC estimate updated with increasing sample size
+% 7.1. Track how the estimate evolves with more samples
 convergence_integral_estimate = cumsum(uniform_samples)./(1:N_samples)';
 
 % cumsum computes the cumulative sum: [x1, x1+x2, x1+x2+x3, ...], where
@@ -75,7 +75,7 @@ convergence_integral_estimate = cumsum(uniform_samples)./(1:N_samples)';
 % Ideally, it should stabilize near the true value (0.5 for f(x) = x over
 % [0,1]) due to the law of large numbers.
 
-% 7.2. MSE of MC integral estimate as sample size increases
+% 7.2. Track how the mean squared error (MSE) evolves with more samples
 convergence_MSE = cumsum((uniform_samples-integral_true_value).^2) ...
     ./(1:N_samples)';
 
@@ -100,9 +100,9 @@ theoretical_error_decay = 1./sqrt(1:N_samples);
 % mean approaches a normal distribution as N increases, with variance
 % decreasing as 1/N.
 
-%% 8. Visualize the convergence behavior of the MC estimate and its error
+%% 8. Visualize convergence of the MC estimate and its error
 
-% 8.1. Plot convergence of MC estimate 
+% 6.1. Plot how the Monte Carlo estimate converges to the true value
 figure
 hold on
 plot(1:N_samples,convergence_integral_estimate,'b','DisplayName', ...
@@ -114,7 +114,7 @@ ylabel('Integral estimate');
 legend('show');
 hold off
 
-% 8.2. Plot convergence of MC estimation error metrics
+% 8.2. Plot how the MSE decreases with more samples
 figure
 hold on
 plot(1:N_samples,convergence_MSE,'r','DisplayName','MSE of MC estimate');
