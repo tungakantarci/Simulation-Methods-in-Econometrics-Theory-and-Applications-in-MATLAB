@@ -1,4 +1,4 @@
-%% Exercise - Monte Carlo integration of a Gaussian function
+% Exercise - Monte Carlo integration of a Gaussian function
 
 %% 1. Aim of the exercise
 % Use Monte Carlo (MC) integration to estimate the area under a Gaussian
@@ -29,16 +29,16 @@ unnormalized_gaussian = exp(-0.5*standard_normal_samples.^2);
 % 4.3. Estimate the integral by averaging the function values and scaling
 integral_estimate = sqrt(2*pi)*mean(unnormalized_gaussian);
 
-%% 5. Convergence behavior of the MC Estimate
+%% 5. Convergence behavior of the MC integral estimate
 
-% 5.1. Track how the estimate evolves with increasing sample size
+% 5.1. Track how the estimate evolves with more samples
 convergence_integral_estimate = ...
     cumsum(sqrt(2*pi).*unnormalized_gaussian)./(1:N_samples)';
 
 % Running average of scaled function values shows convergence toward the
 % true value.
 
-% 5.2. Compute running mean squared error (MSE) of the estimate
+% 5.2. Track how the mean squared error (MSE) evolves with more samples
 convergence_MSE = ...
     cumsum((sqrt(2*pi).*unnormalized_gaussian-sqrt(pi)).^2) ./ ...
     (1:N_samples)';
@@ -47,7 +47,7 @@ convergence_MSE = ...
 % sqrt(pi). The numerator accumulates squared errors; the denominator
 % normalizes by sample count.
 
-%% 6. Visualize convergence of the MC estimate and error metrics
+%% 6. Visualize convergence of the MC estimate and its error
 
 % 6.1. Plot how the Monte Carlo estimate converges to the true value
 figure
@@ -61,7 +61,7 @@ ylabel('Estimate');
 legend('show');
 hold off
 
-% 6.2. Plot how the MSE decreases with increasing sample size
+% 6.2. Plot how the MSE decreases with more samples
 figure
 hold on
 plot(1:N_samples,convergence_MSE,'DisplayName','MSE of MC estimate');
