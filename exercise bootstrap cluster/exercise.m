@@ -18,7 +18,7 @@ clear;
 % 3.2. Load dataset from CSV file
 data = readtable('data.csv');
 
-% Data source reference: Zelig Project, macro dataset. Retrieved from
+% Data source reference: Zelig project, macro dataset. Retrieved from
 % https://github.com/IQSS/Zelig/blob/master/data/macro.tab.gz
 
 %% 4. Set the number of simulations as the number of bootstrap samples
@@ -151,4 +151,5 @@ cluster_df_correction = (N_obs-1)/(N_obs-N_k)*(N_clusters/(N_clusters-1));
 
 % 12.3. Compute cluster-robust SEs using the sandwich formula
 cluster_robust_SE = cluster_df_correction*sqrt(diag(inv(XTX_sum)*M_sum*inv(XTX_sum))); % Sandwich formula: sqrt(diag(correction_factor*(X'X)^(-1)*meat*(X'X)^(-1)))
+
 
