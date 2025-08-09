@@ -18,6 +18,9 @@ clear;
 % 3.2. Load dataset from CSV file
 data = readtable('data.csv');
 
+% Data source eeference: Zelig Project, macro dataset. Retrieved from
+% https://github.com/IQSS/Zelig/blob/master/data/macro.tab.gz
+
 %% 4. Set the number of simulations as the number of bootstrap samples
 
 % 4.1. Set the number of bootstrap samples
