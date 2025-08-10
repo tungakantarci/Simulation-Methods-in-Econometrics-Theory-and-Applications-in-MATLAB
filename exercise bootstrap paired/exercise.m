@@ -22,7 +22,7 @@ N_sim = 5000;
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 10000;
+N_obs_pop = 1000;
 
 % 4.2. Generate data for the independent variable
 X_pop = [random('Uniform',-1,1,[N_obs_pop,1])];
@@ -39,7 +39,7 @@ B_true = 0.5;
 % 4.6. Generate y
 y_pop = X_pop*B_true+u_pop;
 
-% 4.7. Create the population (paired) data
+% 4.7. Create the (paired) population data
 data_pop = [y_pop X_pop];
 
 %% 5. Plot the scatter diagram and the OLS fitted line
@@ -53,40 +53,45 @@ ylabel('y');
 title('Fig. 1. Simulated heteroskedastic data');
 hold off;
 
-%% 6. Generate sample data
+%% 6. Draw samples from the population
 
 % 6.1. Set the sample size
-N_obs_sample = 500;
+N_obs_sample = 100;
 
-% 6.2. Draw a sample from the population
-data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
+% 6.2. Preallocate matrix to save (paired) samples
+data_samples_pop = NaN(N_obs_sample,2,N_sim);
 
-%% 7. Draw (bootsrap) samples from the sample 
+% 6.3. Preallocate vector to store coeficient estimates
+B_hats_data_samples_pop = NaN(N_sim,1);
 
-% 7.1. Preallocate vector to store coefficient estimates
+% 6.4. Monte Carlo sampling
+for i = 1:N_sim
+    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
+    data_samples_pop(:,:,i) = sample_i; % Save samples in third dimension
+    y = sample_i(:,1);
+    X = sample_i(:,2);
+    LSS = exercisefunctionlss(y, X);
+    B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
+end
+
+%% 7. Pick a sample
+
+% Pick a sample from the samples drawn from the population
+data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
+    'Replace',false);
+
+%% 8. Draw (bootsrap) samples from the sample 
+
+% 8.1. Preallocate vector to store coefficient estimates
 B_hats_data_samples_boot = NaN(N_sim,1);
 
-% 7.2. Draw samples from the original sample and compute the coefficient estimate each time 
+% 8.2. Draw samples from the original sample and compute the coefficient estimate each time 
 for i = 1:N_sim
     data_samples_boot = datasample(data_sample,N_obs_sample,'Replace',true);
     y = data_samples_boot(:,1);
     X = data_samples_boot(:,2);
     LSS = exercisefunctionlss(y,X); 
     B_hats_data_samples_boot(i) = LSS.B_hat(1,1); 
-end
-
-%% 8. Draw samples from the population
-
-% 8.1. Preallocate vector to store coeficient estimates
-B_hats_data_samples_pop = NaN(N_sim,1);
-
-% 8.2. Draw samples from the population and compute the coefficient estimate each time
-for i = 1:N_sim
-    data_samples_pop = datasample(data_pop,N_obs_sample,'Replace',false);
-    y = data_samples_pop(:,1);
-    X = data_samples_pop(:,2);
-    LSS = exercisefunctionlss(y,X); 
-    B_hats_data_samples_pop(i) = LSS.B_hat(1,1); 
 end
 
 %% 9. Plot the estimated PDFs
