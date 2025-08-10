@@ -73,13 +73,13 @@ for i = 1:N_sim
     B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
 end
 
-%% 7. Pick a sample
+%% 7. Pick an "initial" sample
 
 % Pick a sample from the samples drawn from the population
 data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
     'Replace',false);
 
-%% 8. Draw (bootstrap) samples from the original sample 
+%% 8. Draw (bootstrap) samples from the initial sample 
 
 % 8.1. Create y and X
 y = data_sample(:,1);
