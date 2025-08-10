@@ -24,7 +24,7 @@ N_sim = 1000;
 N_obs_pop = 1000;
 
 % 4.2. Generate population data
-data_pop = random('Normal', 4, 5, [N_obs_pop, 1]);
+data_pop = random('Normal',4,5,[N_obs_pop,1]);
 
 %% 5. Draw samples from the population
 
