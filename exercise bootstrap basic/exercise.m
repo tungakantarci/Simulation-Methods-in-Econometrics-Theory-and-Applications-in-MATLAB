@@ -44,13 +44,13 @@ for i = 1:N_sim
     means_data_samples_pop(i) = mean(sample_i);
 end
 
-%% 6. Pick a sample
+%% 6. Pick an "initial" sample
 
 % Pick a sample from the samples drawn from the population
 data_sample = datasample(data_samples_pop(:,i),N_obs_sample, ...
     'Replace',false);
 
-%% 7. Draw (bootsrap) samples from the sample
+%% 7. Draw (bootsrap) samples from the initial sample
 
 % 7.1. Preallocate vector to store (bootsrap) sample means
 means_data_samples_boot = NaN(N_sim,1);
