@@ -22,7 +22,7 @@ N_sim = 5000;
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 10000;
+N_obs_pop = 1000;
 
 % 4.2. Generate data for the independent variable
 X_pop = random('Uniform',-1,1,[N_obs_pop,1]);
@@ -52,54 +52,59 @@ ylabel('y');
 title('Fig. 1. Simulated heteroskedastic data');
 hold off;
 
-%% 6. Generate a sample
+%% 6. Draw samples from the population
 
 % 6.1. Set the sample size
-N_obs_sample = 500;
+N_obs_sample = 100;
 
-% 6.2. Draw a sample from the population
-data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
+% 6.2. Preallocate matrix to save (paired) samples
+data_samples_pop = NaN(N_obs_sample,2,N_sim);
 
-%% 7. Draw (bootstrap) samples from the original sample 
+% 6.3. Preallocate vector to store coeficient estimatess
+B_hats_data_samples_pop = NaN(N_sim,1);
 
-% 7.1. Create y and X
+% 6.4. Monte Carlo sampling
+for i = 1:N_sim
+    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
+    data_samples_pop(:,:,i) = sample_i; % Save samples in third dimension
+    y = sample_i(:,1);
+    X = sample_i(:,2);
+    LSS = exercisefunctionlss(y, X);
+    B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
+end
+
+%% 7. Pick a sample
+
+% Pick a sample from the samples drawn from the population
+data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
+    'Replace',false);
+
+%% 8. Draw (bootstrap) samples from the original sample 
+
+% 8.1. Create y and X
 y = data_sample(:,1);
 X = data_sample(:,2);
 
-% 7.2. Estimate beta
+% 8.2. Estimate beta
 LSS = exercisefunctionlss(y,X); 
 B_hat = LSS.B_hat(1,1);
 
-% 7.3. Compute the residuals
+% 8.3. Compute the residuals
 u_hat = LSS.u_hat;
 
-% 7.4. Compute leverage values used in HC2 correction
+% 8.4. Compute leverage values used in HC2 correction
 h = diag(X/(X'*X)*X');
 
-% 7.5. Preallocate vector to store coefficient estimates
+% 8.5. Preallocate vector to store coefficient estimates
 B_hats_data_samples_boot = NaN(N_sim,1);
 
-% 7.6. Draw samples using residual multipliers and compute the coefficient estimate each time
+% 8.6. Draw samples using residual multipliers and compute the coefficient estimate each time
 for i = 1:N_sim
     v = random('Normal',0,1,[N_obs_sample,1]); % N(0,1) multipliers
     % v = 2*(rand(N_obs_sample,1) > 0.5)-1; % Rademacher multipliers
     y_boot = X*B_hat+(u_hat./sqrt(1-h)).*v; % u_hat./sqrt(1-h) is the HC2 adjustment applied to residuals
     LSS = exercisefunctionlss(y_boot,X); 
     B_hats_data_samples_boot(i) = LSS.B_hat(1,1);
-end
-
-%% 8. Draw samples from the population
-
-% 8.1. Preallocate vector to store coeficient estimatess
-B_hats_data_samples_pop = NaN(N_sim,1);
-
-% 8.2. Draw samples from the population and compute the coefficient estimate each time
-for i = 1:N_sim
-    data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
-    y = data_sample(:,1);
-    X = data_sample(:,2);
-    LSS = exercisefunctionlss(y,X); 
-    B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
 end
 
 %% 9. Plot the estimated PDFs
