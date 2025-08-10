@@ -1,4 +1,4 @@
-% Exercise - The method of basic bootsrap
+% Exercise - Understanding the method of basic bootsrap
 
 %% 1. Aim of the exercise
 % To understand how to correctly estimate the sampling distribution of a
@@ -21,41 +21,45 @@ N_sim = 1000;
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 2500000;
+N_obs_pop = 1000;
 
 % 4.2. Generate population data
-data_pop = random('Normal',4,5,[N_obs_pop,1]);
+data_pop = random('Normal', 4, 5, [N_obs_pop, 1]);
 
-%% 5. Generate sample data
+%% 5. Draw samples from the population
 
 % 5.1. Set the sample size
-N_obs_sample = 1000;
+N_obs_sample = 100;
 
-% 5.2. Draw a sample from the population
-data_sample = datasample(data_pop,N_obs_sample,'Replace',false);
+% 5.2. Preallocate matrix to store samples
+data_samples_pop = NaN(N_obs_sample,N_sim);
 
-%% 6. Draw (bootsrap) samples from the sample
+% 5.3. Preallocate vector to store sample means
+means_data_samples_pop = NaN(N_sim,1);
 
-% 6.1. Preallocate vector to store (bootsrap) sample means
+% 5.4. Draw samples from the population and compute the sample mean each time
+for i = 1:N_sim
+    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
+    data_samples_pop(:,i) = sample_i;
+    means_data_samples_pop(i) = mean(sample_i);
+end
+
+%% 6. Pick a sample
+
+% Pick a sample from the samples drawn from the population
+data_sample = datasample(data_samples_pop(:,i),N_obs_sample, ...
+    'Replace',false);
+
+%% 7. Draw (bootsrap) samples from the sample
+
+% 7.1. Preallocate vector to store (bootsrap) sample means
 means_data_samples_boot = NaN(N_sim,1);
 
-% 6.2. Draw samples from the original sample and compute the sample mean each time
+% 7.2. Draw samples from the original sample and compute the sample mean each time
 for i = 1:N_sim
     data_samples_boot = datasample(data_sample,N_obs_sample, ...
         'Replace',true);
     means_data_samples_boot(i) = mean(data_samples_boot);
-end
-
-%% 7. Draw samples from the population
-
-% 7.1. Preallocate vector to store sample means
-means_data_samples_pop = NaN(N_sim,1);
-
-% 7.2. Draw samples from the population and compute the sample mean each time
-for i = 1:N_sim
-    data_samples_pop = datasample(data_pop,N_obs_sample, ...
-        'Replace',false);
-    means_data_samples_pop(i) = mean(data_samples_pop);
 end
 
 %% 8. Plot the PDFs of sample means from bootsrap and population sampling
