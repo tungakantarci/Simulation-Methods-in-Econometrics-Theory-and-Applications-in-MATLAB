@@ -102,7 +102,7 @@ theoretical_error_decay = 1./sqrt(1:N_samples);
 
 %% 8. Visualize convergence of the MC estimate and its error
 
-% 6.1. Plot how the Monte Carlo estimate converges to the true value
+% 8.1. Plot how the Monte Carlo estimate converges to the true value
 figure
 hold on
 plot(1:N_samples,convergence_integral_estimate,'b','DisplayName', ...
