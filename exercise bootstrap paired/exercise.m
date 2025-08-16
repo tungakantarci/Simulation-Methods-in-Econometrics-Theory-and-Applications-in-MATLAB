@@ -13,16 +13,19 @@
 
 %% 3. Set values for the parameters of the simulation
 
-% 3.1. Clear the memory
+% 3.1. Set seed reproducible results
+rng(1)
+
+% 3.2. Clear the memory
 clear;
 
-% 3.2. Set the number of simulations as the number of bootstrap samples
+% 3.3. Set the number of simulations as the number of bootstrap samples
 N_sim = 5000;
 
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 1000;
+N_obs_pop = 10000;
 
 % 4.2. Generate data for the independent variable
 X_pop = [random('Uniform',-1,1,[N_obs_pop,1])];
@@ -43,15 +46,16 @@ y_pop = X_pop*B_true+u_pop;
 data_pop = [y_pop X_pop];
 
 %% 5. Plot the scatter diagram and the OLS fitted line
-figure;
-scatter(X_pop,y_pop,'filled','MarkerFaceColor','black');
+figure
 hold on
+scatter(X_pop,y_pop,'filled','MarkerFaceColor',[0.5 0.5 0.5]);
 h = lsline;
-set(h,'Color','blue','LineWidth',2);
+set(h,'Color','blue');
+title('Fig. 1. Simulated heteroskedastic data');
 xlabel('X');
 ylabel('y');
-title('Fig. 1. Simulated heteroskedastic data');
-hold off;
+legend('Population data','OLS fitted line');
+hold off
 
 %% 6. Draw samples from the population
 
@@ -67,10 +71,10 @@ B_hats_data_samples_pop = NaN(N_sim,1);
 % 6.4. Monte Carlo sampling
 for i = 1:N_sim
     sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
-    data_samples_pop(:,:,i) = sample_i; % Save samples in third dimension
+    data_samples_pop(:,:,i) = sample_i; % Save samples in 3rd dimension
     y = sample_i(:,1);
     X = sample_i(:,2);
-    LSS = exercisefunctionlss(y, X);
+    LSS = exercisefunctionlssrobust(y,X);
     B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
 end
 
@@ -85,34 +89,47 @@ data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
 % 8.1. Preallocate vector to store coefficient estimates
 B_hats_data_samples_boot = NaN(N_sim,1);
 
-% 8.2. Draw samples from the original sample and compute the coefficient estimate each time 
+% 8.2. Resample from initial sample and estimate coefficients each time 
 for i = 1:N_sim
-    data_samples_boot = datasample(data_sample,N_obs_sample,'Replace',true);
+    data_samples_boot = datasample(data_sample,N_obs_sample, ...
+        'Replace',true);
     y = data_samples_boot(:,1);
     X = data_samples_boot(:,2);
-    LSS = exercisefunctionlss(y,X); 
+    LSS = exercisefunctionlssrobust(y,X); 
     B_hats_data_samples_boot(i) = LSS.B_hat(1,1); 
 end
 
 %% 9. Plot the estimated PDFs
-figure;
+figure
 hold on
 ksdensity(B_hats_data_samples_boot,'function','pdf');
 ksdensity(B_hats_data_samples_pop,'function','pdf');
-xline(B_true,'Color','black');
-ylabel('Density');
+title(['Fig. 2. PDF comparison: bootstrap B\_hat vs. population ' ...
+    '        sample B\_hat']);
 xlabel('B\_hat');
-legend('Bootstrap sampling','Population sampling','B\_true');
-title('Fig. 2. PDF comparison: bootstrap B\_hat vs. population sample B\_hat');
-hold off;
+ylabel('Density');
+legend('Bootstrap sampling','Population sampling');
+hold off
 
 %% 10. Plot the estimated CDFs
-figure;
+figure
 hold on
 ksdensity(B_hats_data_samples_boot,'function','cdf');
 ksdensity(B_hats_data_samples_pop,'function','cdf');
-ylabel('Cumulative distribution');
+title(['Fig. 3. CDF comparison: bootstrap B\_hat vs. population ' ...
+    '    sample B\_hat']);
 xlabel('B\_hat');
+ylabel('Cumulative distribution');
 legend('Bootstrap sampling','Population sampling');
-title('Fig. 3. CDF comparison: bootstrap B\_hat vs. population sample B\_hat');
 hold off
+
+%% 11. Comparing SE estimates across different sample sizes
+
+% 11.1. True estimate based on Monte Carlo simulation
+SE_true = std(B_hats_data_samples_pop);
+
+% 11.2. Heteroskedasticity-consistent estimate
+SE_HC = LSS.B_hat_SEE_robust;
+
+% 11.3. Bootstrap estimate
+SE_boot = std(B_hats_data_samples_boot);
