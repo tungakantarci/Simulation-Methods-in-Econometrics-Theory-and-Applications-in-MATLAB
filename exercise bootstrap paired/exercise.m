@@ -105,7 +105,7 @@ hold on
 ksdensity(B_hats_data_samples_boot,'function','pdf');
 ksdensity(B_hats_data_samples_pop,'function','pdf');
 title(['Fig. 2. PDF comparison: bootstrap B\_hat vs. population ' ...
-    '        sample B\_hat']);
+    'sample B\_hat']);
 xlabel('B\_hat');
 ylabel('Density');
 legend('Bootstrap sampling','Population sampling');
@@ -117,7 +117,7 @@ hold on
 ksdensity(B_hats_data_samples_boot,'function','cdf');
 ksdensity(B_hats_data_samples_pop,'function','cdf');
 title(['Fig. 3. CDF comparison: bootstrap B\_hat vs. population ' ...
-    '    sample B\_hat']);
+    'sample B\_hat']);
 xlabel('B\_hat');
 ylabel('Cumulative distribution');
 legend('Bootstrap sampling','Population sampling');
