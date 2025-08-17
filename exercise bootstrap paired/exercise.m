@@ -123,7 +123,7 @@ ylabel('Cumulative distribution');
 legend('Bootstrap sampling','Population sampling');
 hold off
 
-%% 11. Comparing SE estimates across different sample sizes
+%% 11. Comparing the SE estimators across different sample sizes
 
 % 11.1. True estimate based on Monte Carlo simulation
 SE_true = std(B_hats_data_samples_pop);
