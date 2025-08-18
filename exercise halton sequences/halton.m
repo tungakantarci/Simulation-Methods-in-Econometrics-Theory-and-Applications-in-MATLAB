@@ -10,8 +10,8 @@ function [H,Z] = halton(N, dimensions, draws, varargin)
 % scrambling and randomization à la Bhat (2003).
 %
 % Syntax:
-%   [H, Z] = exercisefun(N, dimensions, draws)
-%   [H, Z] = exercisefun(N, dimensions, draws, 'Name', Value, ...)
+%   [H, Z] = exercisefun(N,dimensions,draws)
+%   [H, Z] = exercisefun(N,dimensions,draws,'Name',Value, ...)
 %
 % Inputs:
 %   N           - Number of observational units.
@@ -32,7 +32,7 @@ function [H,Z] = halton(N, dimensions, draws, varargin)
 %                 Set to 1 to enable. Default: 0.
 %
 % Outputs:
-%   H - Halton draws of size (N_obs × N_dim × N_draws).
+%   H - Halton draws of size (N × dimiensions × draws).
 %   Z - Corresponding values from a standard normal distribution.
 %
 % Notes:
@@ -115,7 +115,7 @@ hp = net(h,N*draws);
 
 % Select dimensions based on supplied primes
 if prnum ~= 0
-    [~, primi] = ismember(prnum, primes(max(prnum)+1));
+    [~, primi] = ismember(prnum,primes(max(prnum)+1));
     hp = hp(:, primi);
 end
 
