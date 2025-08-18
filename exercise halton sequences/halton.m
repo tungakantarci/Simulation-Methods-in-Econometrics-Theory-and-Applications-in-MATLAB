@@ -1,4 +1,4 @@
-function [H,Z] = halton(N, dimensions, draws, varargin)
+function [H,Z] = halton(N,dimensions,draws,varargin)
 %HALTON Generate Halton sequences and transform to standard normal.
 % Version 1.0, Updated August 2025
 % Author: Elisabeth Beusch
