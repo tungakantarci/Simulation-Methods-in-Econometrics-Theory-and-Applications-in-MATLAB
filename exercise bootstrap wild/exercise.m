@@ -1,12 +1,14 @@
 % Exercise - Understanding the method of wild bootstrap
 
 %% 1. Aim of the exercise
-% To understand how to correctly estimate standard errors of regression
-% coefficients when the error variance is heteroskedastic. Standard
-% bootstrap methods can produce misleading inference under
-% heteroskedasticity. We use the wild bootstrap, which perturbs residuals
-% using random multipliers, to improve robustness and compare its
-% performance to sampling directly from the population.
+% The aim of this exercise is to understand how to accurately estimate the
+% standard errors of regression coefficients in the presence of
+% heteroskedastic error variance. Traditional bootstrap methods, such as
+% the paired bootstrap, may yield misleading inference under
+% heteroskedasticity. To address this, we use the wild bootstrap method,
+% which improves robustness by modifying residuals with random multipliers.
+% We then compare its performance to that of direct sampling from the
+% population.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
@@ -22,7 +24,7 @@ N_sim = 5000;
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 1000;
+N_obs_pop = 10000;
 
 % 4.2. Generate data for the independent variable
 X_pop = random('Uniform',-1,1,[N_obs_pop,1]);
@@ -42,15 +44,15 @@ y_pop = X_pop*B_true+u_pop;
 % 4.7. Generate (paired) population data
 data_pop = [y_pop X_pop];
 
-%% 5. Plot the scatter diagram and the OLS fitted line
-figure;
-scatter(X_pop,y_pop,'filled','MarkerFaceColor','black');
+%% 5. Plot the heteroskedastic true data
+figure
 hold on
-set(lsline,'color','blue','LineWidth',2);
+scatter(X_pop,y_pop);
+title('Fig. 1. Simulated heteroskedastic data');
 xlabel('X');
 ylabel('y');
-title('Fig. 1. Simulated heteroskedastic data');
-hold off;
+legend('Population data');
+hold off
 
 %% 6. Draw samples from the population
 
@@ -66,7 +68,7 @@ B_hats_data_samples_pop = NaN(N_sim,1);
 % 6.4. Monte Carlo sampling
 for i = 1:N_sim
     sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
-    data_samples_pop(:,:,i) = sample_i; % Save samples in third dimension
+    data_samples_pop(:,:,i) = sample_i; % Save samples in 3rd dimension
     y = sample_i(:,1);
     X = sample_i(:,2);
     LSS = exercisefunctionlss(y, X);
@@ -81,7 +83,7 @@ data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
 
 %% 8. Draw (bootstrap) samples from the initial sample 
 
-% 8.1. Create y and X
+% 8.1. Extract fixed design matrix and outcome variable
 y = data_sample(:,1);
 X = data_sample(:,2);
 
@@ -98,34 +100,47 @@ h = diag(X/(X'*X)*X');
 % 8.5. Preallocate vector to store coefficient estimates
 B_hats_data_samples_boot = NaN(N_sim,1);
 
-% 8.6. Draw samples using residual multipliers and compute the coefficient estimate each time
+% 8.6. Resample from initial sample and estimate the coefficient 
 for i = 1:N_sim
     v = random('Normal',0,1,[N_obs_sample,1]); % N(0,1) multipliers
-    % v = 2*(rand(N_obs_sample,1) > 0.5)-1; % Rademacher multipliers
-    y_boot = X*B_hat+(u_hat./sqrt(1-h)).*v; % u_hat./sqrt(1-h) is the HC2 adjustment applied to residuals
+    % v = 2*(random('Uniform',-1,1,[N_obs_sample,1]) > 0.5)-1; % Rademacher multipliers
+    y_boot = X*B_hat+(u_hat./sqrt(1-h)).*v; % u_hat./sqrt(1-h) is the HC2 adjustment to residuals
     LSS = exercisefunctionlss(y_boot,X); 
     B_hats_data_samples_boot(i) = LSS.B_hat(1,1);
 end
 
-%% 9. Plot the estimated PDFs
-figure;
+%% 9. Plot estimated PDFs
+figure
 hold on
-ksdensity(B_hats_data_samples_boot,'function','pdf');
-ksdensity(B_hats_data_samples_pop,'function','pdf');
-xline(B_true,'Color','black');
+[f_boot,x_boot] = ksdensity(B_hats_data_samples_boot,'function','pdf');
+plot(x_boot,f_boot,'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','Bootstrap sampling');
+xline(mean(B_hats_data_samples_boot),'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','B\_hat\_bootstrap');
+[f_pop,x_pop] = ksdensity(B_hats_data_samples_pop,'function','pdf');
+plot(x_pop,f_pop,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','Population sampling');
+xline(B_true,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','B\_true');
 ylabel('Density');
 xlabel('B\_hat');
-legend('Bootstrap sampling','Population sampling','B\_true');
-title('Fig. 2. PDF comparison: bootstrap B\_hat vs. population sample B\_hat');
+legend('show')
+title(['Fig. 2. PDF comparison: bootstrap vs. ' ...
+    'population sampling']);
 hold off
 
-%% 10. Plot the estimated CDFs
-figure;
+%% 10. Plot estimated CDFs
+figure
 hold on
-ksdensity(B_hats_data_samples_boot,'function','cdf');
-ksdensity(B_hats_data_samples_pop,'function','cdf');
+[f_boot,x_boot] = ksdensity(B_hats_data_samples_boot,'function','cdf');
+plot(x_boot,f_boot,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','Population sampling');
+[f_pop,x_pop] = ksdensity(B_hats_data_samples_pop,'function','cdf');
+plot(x_pop,f_pop,'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','Bootstrap sampling');
 ylabel('Cumulative distribution');
 xlabel('B\_hat');
-legend('Bootstrap sampling','Population sampling');
-title('Fig. 3. CDF comparison: bootstrap B\_hat vs. population sample B\_hat');
+legend('show');
+title(['Fig. 3. CDF comparison: bootstrap vs. ' ...
+    'population sampling']);
 hold off
