@@ -59,14 +59,13 @@ for i = 1:N_sim
     B_hat_sim_hom(i,2) = LSS_hom.B_hat(2,1); 
 end
 
-%% 4. Plot the scatter diagram and the OLS fitted line
+%% 4. Plot the scatter diagram
 figure
 hold on
-scatter(X(:,2),y_het,'filled','black')
-set(lsline,'color','blue','LineWidth',2)
-title(['Fig. 1. Heteroskedasticity Created by Simulating the ' ...
-    'Estimate of the S.D. of the Reg. Err. as a Fun. of x_1'])
-legend('Scatter Plot','Fitted Line');
+scatter(X(:,2),y_het,'DisplayName','Data')
+title(['Fig. 1. Heteroskedasticity created by simulating the ' ...
+    'estimate of the S.D. of the reg. err. as a fun. of x_1'])
+legend('show');
 hold off
 
 %% 5. Plot the sampling distribution of the OLS estimator 
@@ -82,6 +81,6 @@ legend('Error is heteroskedastic','Error is homoskedastic', ...
     'B\_hat\_sim\_mean');
 hold off
 
-%% 6. Check the variance of the error  
+%% 6. Check the variance of the heteroskedastic error  
 var(u_het(x_1 > 0.1 & x_1 < 0.3,1)) 
 var(u_het(x_1 > 0.6 & x_1 < 0.8,1))
