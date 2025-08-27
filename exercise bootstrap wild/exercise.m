@@ -67,19 +67,21 @@ B_hats_data_samples_pop = NaN(N_sim,1);
 
 % 6.4. Monte Carlo sampling
 for i = 1:N_sim
-    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
-    data_samples_pop(:,:,i) = sample_i; % Save samples in 3rd dimension
-    y = sample_i(:,1);
-    X = sample_i(:,2);
-    LSS = exercisefunctionlss(y, X);
+    data_samples_pop(:,:,i) = datasample(data_pop,N_obs_sample, ...
+        'Replace',false); % Save samples in 3rd dimension
+    y = data_samples_pop(:,1,i);
+    X = data_samples_pop(:,2,i);
+    LSS = exercisefunctionlss(y,X);
     B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
 end
 
 %% 7. Pick an "initial" sample
 
-% Pick a sample from the samples drawn from the population
-data_sample = datasample(data_samples_pop(:,:,i),N_obs_sample, ...
-    'Replace',false);
+% 7.1. Randomly pick one sample index
+sample_index = randi(N_sim);  
+
+% 7.2. Pick one sample from the previously drawn samples
+data_sample = data_samples_pop(:,:,sample_index);
 
 %% 8. Draw (bootstrap) samples from the initial sample 
 
