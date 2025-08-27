@@ -40,16 +40,18 @@ means_data_samples_pop = NaN(N_sim,1);
 
 % 5.4. Draw samples from the population and compute their means
 for i = 1:N_sim
-    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
-    data_samples_pop(:,i) = sample_i;
-    means_data_samples_pop(i) = mean(sample_i);
+    data_samples_pop(:,i) = datasample(data_pop,N_obs_sample, ...
+        'Replace',false);
+    means_data_samples_pop(i) = mean(data_samples_pop(:,i));
 end
 
 %% 6. Pick an "initial" sample
 
-% Pick a sample from the samples drawn from the population
-data_sample = datasample(data_samples_pop(:,i),N_obs_sample, ...
-    'Replace',false);
+% 6.1. Randomly pick one sample index
+sample_index = randi(N_sim);  
+
+% 6.2. Pick one sample from the previously drawn samples
+data_sample = data_samples_pop(:,sample_index);
 
 %% 7. Draw (bootsrap) samples from the initial sample
 
