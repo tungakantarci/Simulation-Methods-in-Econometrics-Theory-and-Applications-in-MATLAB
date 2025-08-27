@@ -1,88 +1,144 @@
-% Exercise - Understanding the method of basic bootsrap
+% Exercise - Understanding the method of paired bootstrap
 
 %% 1. Aim of the exercise
-% The aim of this exercise is to understand how to correctly estimate the
-% sampling distribution of a statistic, in particular that of the sample
-% mean, when the population distribution is unknown. We compare two
-% approaches: (i) bootstrap resampling from the sample, and (ii) repeated
-% sampling from the full population, to evaluate how well the bootstrap
-% approximates the true distribution.
+% To understand how to correctly estimate standard errors of regression
+% coefficients when the error variance is not constant (i.e.,
+% heteroskedasticity is present). Standard inference methods can be
+% misleading in such cases. We use the paired bootstrap method, which
+% resamples observations as (y, X) pairs, to account for heteroskedasticity
+% and compare its performance to sampling directly from the population.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
 
 %% 3. Set values for the parameters of the simulation
 
-% 3.1. Clear the memory 
+% 3.1. Clear the memory
 clear;
 
-% 3.2. Set the number of simulations as the number of samples
-N_sim = 1000;
+% 3.2. Set the number of simulations as the number of bootstrap samples
+N_sim = 5000;
 
 %% 4. Generate population data
 
 % 4.1. Set the population size
-N_obs_pop = 1000;
+N_obs_pop = 10000;
 
-% 4.2. Generate population data
-data_pop = random('Normal',4,5,[N_obs_pop,1]);
+% 4.2. Generate data for the independent variable
+X_pop = [random('Uniform',-1,1,[N_obs_pop,1])];
 
-%% 5. Draw samples from the population
+% 4.3. Heteroskedasticity parameter 
+Gamma = 1.5; 
 
-% 5.1. Set the sample size
+% 4.4. Generate error
+u_pop = random('Normal',0,exp(X_pop*Gamma),[N_obs_pop,1]);
+
+% 4.5. Set true beta of the model
+B_true = 0.5; 
+
+% 4.6. Generate y
+y_pop = X_pop*B_true+u_pop;
+
+% 4.7. Create the (paired) population data
+data_pop = [y_pop X_pop];
+
+%% 5. Plot the heteroskedastic true data
+figure
+hold on
+scatter(X_pop,y_pop);
+title('Fig. 1. Simulated heteroskedastic data');
+xlabel('X');
+ylabel('y');
+legend('Population data');
+hold off
+
+%% 6. Draw samples from the population
+
+% 6.1. Set the sample size
 N_obs_sample = 100;
 
-% 5.2. Preallocate matrix to store samples
-data_samples_pop = NaN(N_obs_sample,N_sim);
+% 6.2. Preallocate matrix to save (paired) samples
+data_samples_pop = NaN(N_obs_sample,2,N_sim);
 
-% 5.3. Preallocate vector to store sample means
-means_data_samples_pop = NaN(N_sim,1);
+% 6.3. Preallocate vector to store coeficient estimates
+B_hats_data_samples_pop = NaN(N_sim,1);
 
-% 5.4. Draw samples from the population and compute their means
+% 6.4. Monte Carlo sampling
 for i = 1:N_sim
-    sample_i = datasample(data_pop,N_obs_sample,'Replace',false);
-    data_samples_pop(:,i) = sample_i;
-    means_data_samples_pop(i) = mean(sample_i);
+    data_samples_pop(:,:,i) = datasample(data_pop,N_obs_sample, ...
+        'Replace',false); % Save samples in 3rd dimension
+    y = data_samples_pop(:,1,i);
+    X = data_samples_pop(:,2,i);
+    LSS = exercisefunctionlssrobust(y,X);
+    B_hats_data_samples_pop(i) = LSS.B_hat(1,1);
 end
 
-%% 6. Pick an "initial" sample
+%% 7. Pick an "initial" sample
 
-% Pick a sample from the samples drawn from the population
-data_sample = datasample(data_samples_pop(:,i),N_obs_sample, ...
-    'Replace',false);
+% 7.1. Randomly pick one sample index
+sample_index = randi(N_sim);  
 
-%% 7. Draw (bootsrap) samples from the initial sample
+% 7.2. Pick one sample from the previously drawn samples
+data_sample = data_samples_pop(:,:,sample_index);
 
-% 7.1. Preallocate vector to store (bootsrap) sample means
-means_data_samples_boot = NaN(N_sim,1);
+%% 8. Draw (bootsrap) samples from the initial sample 
 
-% 7.2. Draw samples from the initial sample and compute their means
+% 8.1. Preallocate vector to store coefficient estimates
+B_hats_data_samples_boot = NaN(N_sim,1);
+
+% 8.6. Resample from initial sample and estimate the coefficient 
 for i = 1:N_sim
     data_samples_boot = datasample(data_sample,N_obs_sample, ...
         'Replace',true);
-    means_data_samples_boot(i) = mean(data_samples_boot);
+    y = data_samples_boot(:,1);
+    X = data_samples_boot(:,2);
+    LSS = exercisefunctionlssrobust(y,X); 
+    B_hats_data_samples_boot(i) = LSS.B_hat(1,1); 
 end
 
-%% 8. Plot the PDFs of sample means from bootstrap and population sampling
-figure;
+%% 9. Plot estimated PDFs
+figure
 hold on
-ksdensity(means_data_samples_boot,'function','pdf');
-ksdensity(means_data_samples_pop,'function','pdf');
+[f_boot,x_boot] = ksdensity(B_hats_data_samples_boot,'function','pdf');
+plot(x_boot,f_boot,'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','Bootstrap sampling');
+xline(mean(B_hats_data_samples_boot),'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','B\_hat\_boot');
+[f_pop,x_pop] = ksdensity(B_hats_data_samples_pop,'function','pdf');
+plot(x_pop,f_pop,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','Population sampling');
+xline(B_true,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','B\_true');
 ylabel('Density');
-xlabel('Sample mean');
-legend('Population sampling','Bootstrap sampling');
-title(['Fig. 1. PDFs of sample means based on bootstrap and ' ...
-    'population sampling']);
+xlabel('B\_hat');
+legend('show')
+title(['Fig. 2. PDF comparison: bootstrap B\_hat vs. ' ...
+    'population sample B\_hat']);
 hold off
 
-%% 9. Plot the CDFs of sample means from bootstrap and population sampling
-figure;
+%% 10. Plot estimated CDFs
+figure
 hold on
-ksdensity(means_data_samples_boot,'function','cdf');
-ksdensity(means_data_samples_pop,'function','cdf');
+[f_boot,x_boot] = ksdensity(B_hats_data_samples_boot,'function','cdf');
+plot(x_boot,f_boot,'Color',[0,0.4470,0.7410], ...
+    'DisplayName','Population sampling');
+[f_pop,x_pop] = ksdensity(B_hats_data_samples_pop,'function','cdf');
+plot(x_pop,f_pop,'Color',[0.8500,0.3250,0.0980], ...
+    'DisplayName','Bootstrap sampling');
 ylabel('Cumulative distribution');
-xlabel('Sample mean');
-legend('Population sampling','Bootstrap sampling');
-title(['Fig. 2. CDFs of sample means based on bootsrap and ' ...
-    'population sampling']);
+xlabel('B\_hat');
+legend('show');
+title(['Fig. 3. CDF comparison: bootstrap B\_hat vs. ' ...
+    'population sample B\_hat']);
 hold off
+
+%% 11. Comparing the SE estimators across different sample sizes
+
+% 11.1. True estimate based on Monte Carlo simulation
+SE_true = std(B_hats_data_samples_pop);
+
+% 11.2. Heteroskedasticity-consistent estimate
+SE_HC = LSS.B_hat_SEE_robust;
+
+% 11.3. Bootstrap estimate
+SE_boot = std(B_hats_data_samples_boot);
