@@ -53,7 +53,7 @@ data_samples_pop = NaN(N_obs_sample,N_sim);
 % 6.3. Preallocate vector to store sample means
 means_data_samples_pop = NaN(N_sim,1);
 
-% 6.4. Draw samples from the population and compute the sample mean each time
+% 6.4. Sample from the population and compute the sample mean each time
 for i = 1:N_sim
     start_idx = randi(N_obs_pop-N_obs_sample+1);
     data_samples_pop(:,i) = data_pop(start_idx:start_idx+N_obs_sample-1);
@@ -69,13 +69,13 @@ sample_index = randi(N_sim);
 data_sample = data_samples_pop(:,sample_index);
 
 % 7.3. Compute optimal block length
-block_length = ceil(N_obs_sample^(1/5)); % Rule-of-thumb for block bootstrap
+block_length = ceil(N_obs_sample^(1/5));
 
 % 7.4. Compute how many full blocks can be formed
-N_blocks = floor(N_obs_sample/block_length); % Maximum number of full blocks
+N_blocks = floor(N_obs_sample/block_length); % Max. num. of full blocks
 
 % 7.5. Trim sample to fit an exact number of full blocks
-trimmed_sample = data_sample(1:N_blocks*block_length); % Ensures reshape works cleanly
+trimmed_sample = data_sample(1:N_blocks*block_length);
 
 % 7.6. Reshape trimmed sample into non-overlapping blocks
 blocks = reshape(trimmed_sample,block_length,N_blocks)';
@@ -85,7 +85,7 @@ blocks = reshape(trimmed_sample,block_length,N_blocks)';
 % 8.1. Preallocate vector to store (bootsrap) sample means
 means_data_samples_boot = NaN(N_sim,1);
 
-% 8.2. Draw samples of k blocks from the original sample and compute the sample mean each time
+% 8.2. Resample k blocks from the initial sample and compute the mean
 for i = 1:N_sim
     data_samples_boot = datasample(blocks,N_blocks,1,'Replace',true);
     data_samples_boot_flat = data_samples_boot(:);
