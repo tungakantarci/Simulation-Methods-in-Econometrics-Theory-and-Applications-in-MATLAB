@@ -1,8 +1,14 @@
 function [H,Z] = halton(N,dimensions,draws,varargin)
 %HALTON Generate Halton sequences and transform to standard normal.
-% Version 1.0, Updated August 2025
-% Author: Elisabeth Beusch
+% Version 2.0, Updated August 2025
 % Compatible with MATLAB R2014a and later
+%
+% Original Author: Elisabeth Beusch
+% Modified by: Tunga Kantarcı, August 2025
+%
+% Description of Modifications:
+%   - Adjusted comments and code to prevent edge cases and input conflicts
+%     that could cause runtime errors or misbehavior.
 %
 % This function computes Halton sequences using the specified prime bases
 % and transforms them into standard normal draws. The implementation
