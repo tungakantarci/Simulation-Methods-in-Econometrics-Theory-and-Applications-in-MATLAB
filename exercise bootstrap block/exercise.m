@@ -80,9 +80,9 @@ trimmed_sample = data_sample(1:N_blocks*block_length);
 % 7.6. Reshape trimmed sample into non-overlapping blocks
 blocks = reshape(trimmed_sample,block_length,N_blocks)';
 
-%% 8. Draw (bootsrap) samples from the initial sample 
+%% 8. Draw (bootstrap) samples from the initial sample 
 
-% 8.1. Preallocate vector to store (bootsrap) sample means
+% 8.1. Preallocate vector to store (bootstrap) sample means
 means_data_samples_boot = NaN(N_sim,1);
 
 % 8.2. Resample k blocks from the initial sample and compute the mean
