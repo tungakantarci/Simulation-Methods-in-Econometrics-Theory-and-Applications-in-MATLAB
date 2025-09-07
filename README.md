@@ -5,4 +5,4 @@
 5. Some of the exercises make use of the MATLAB functions in the "exercise function" or "exercise function robust" folders. The code in these .m files require the Statisics and Machine Learning Toolbox of MATLAB.
 6. To download the .m and PDF files, first click on a file and then click on the download button at the upper-right panel of the page.
 7. Some of the exercises presented on this page are a collaborative effort. Contributors of an exercise are listed in the PDF file of that exercise. The contributors include Elisabeth Beusch, Akash Boelens, Jesper Eizenga, Hartog Horsch, Renata-Maria Istrătescu, Tunga Kantarcı, Quinten Salomons, Simonas Stravinskas, Jelmer Weiringa and Axel Zoons. To enhance clarity and readability, we used Microsoft Copilot to assist with language refinement. All ideas, methods, and instructional design are entirely our own.
-8. If you find this project useful, please consider giving it a ⭐ to help others discover it.
+8. If you find this project useful, consider giving it a ⭐ to help others discover it.
