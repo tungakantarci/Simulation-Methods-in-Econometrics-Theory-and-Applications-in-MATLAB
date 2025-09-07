@@ -4,16 +4,17 @@ function [H,Z] = halton(N,dimensions,draws,varargin)
 % Compatible with MATLAB R2014a and later
 %
 % Original Author: Elisabeth Beusch
-% Modified by: Tunga Kantarcı, August 2025
+% Modified by: Tunga Kantarci, August 2025
 %
 % Description of Modifications:
-%   - Adjusted comments and code to prevent edge cases and input conflicts
-%     that could cause runtime errors or misbehavior.
+%   - Adjusted comments and code to prevent edge cases and input 
+%     conflicts that could cause runtime errors or misbehavior.
 %
-% This function computes Halton sequences using the specified prime bases
-% and transforms them into standard normal draws. The implementation
-% follows chapters 9.3.3–9.3.5 in Train (2003) and includes options for
-% scrambling and randomization à la Bhat (2003).
+% This function computes Halton sequences using the specified prime 
+% bases and transforms them into standard normal draws. The 
+% implementation follows chapters 9.3.3-9.3.5 in Train (2003) and 
+% includes options for randomization and scrambling with respect to 
+% Bhat (2003).
 %
 % Syntax:
 %   [H, Z] = halton(N,dimensions,draws)
@@ -31,14 +32,15 @@ function [H,Z] = halton(N,dimensions,draws,varargin)
 %                 Default: 50.
 %   'leap'      - Number of points to skip between draws.
 %                 Default: 0.
-%   'random'    - Logical flag to apply randomization à la Bhat (2003).
+%   'random'    - Logical flag to apply randomization with respect to 
+%                 Bhat (2003).
 %                 Set to 1 to enable. Default: 0.
 %   'scramble'  - Logical flag to scramble the Halton sequence.
 %                 Recommended for high-dimensional settings.
 %                 Set to 1 to enable. Default: 0.
 %
 % Outputs:
-%   H - Halton draws of size (N × dimensions × draws).
+%   H - Halton draws of size (N x dimensions x draws).
 %   Z - Corresponding values from a standard normal distribution.
 %
 % Notes:
@@ -48,8 +50,8 @@ function [H,Z] = halton(N,dimensions,draws,varargin)
 %
 % References:
 %   Bhat, C. R., 2003. Simulation estimation of mixed discrete choice
-%   models using randomized and scrambled Halton sequences. Transportation
-%   Research Part B: Methodological, 37 (9), 837–855.
+%   models using randomized and scrambled Halton sequences. 
+%   Transportation Research Part B: Methodological, 37 (9), 837-855.
 %
 %   Train, K., 2003. Discrete Choice Methods with Simulation. Cambridge
 %   University Press.
@@ -73,7 +75,7 @@ toscramble = opts.Results.scramble;
 
 %% Define prime bases and dimensions
 % If prime == 0, use first 'dimensions' primes implicitly
-if isequal(prime, 0)
+if isequal(prime,0)
     prime = primes(100); % Generate a pool of primes
     prime = prime(1:dimensions); % Select first 'dimensions' primes
 end
@@ -93,15 +95,17 @@ if dimensions == 1 && prime(1) <= 2
 end
 
 % Set Halton set dimensionality
-p = max(prime);  % haltonset must cover all primes used
+p = max(prime); % haltonset must cover all primes used
 
 %% Warnings
 if dimensions >= 7 && toscramble == 0
-    warning('Scrambling is recommended for high-dimensional Halton draws.');
+    warning(['Scrambling is recommended ' ...
+        'for high-dimensional Halton draws.']);
 end
 
 if (burn - max(prime) <= 10) || (isscalar(prime) && dimensions >= 13)
-    warning('The default burn setting might be too short for your primes');
+    warning(['The default burn setting ' ...
+        'might be too short for your primes']);
 end
 
 %% Generate Halton sequences
@@ -122,11 +126,12 @@ hp = net(h,N*draws); % Generate Halton points
 all_primes = primes(p+1);
 [~,primi] = ismember(prime,all_primes);
 if any(primi == 0)
-    error('One or more supplied primes are not valid or not found in the prime list.');
+    error(['One or more supplied primes are not valid' ...
+        'or not found in the prime list.']);
 end
 hp = hp(:, primi); % Subset to requested dimensions
 
-%% Randomization à la Bhat (Train, 2003, p. 264)
+%% Randomization with respect to Bhat (Train, 2003, p. 264)
 if randhalt == 1
     mu = rand(1,dimensions);
     mu = repmat(mu,N*draws,1);
@@ -140,14 +145,14 @@ expected_cols = dimensions;
 actual_cols = size(hp,2);
 
 if actual_cols ~= expected_cols
-    error('Mismatch in Halton output dimensions: expected %d,got %d.', ...
-        expected_cols,actual_cols);
+    error(['Mismatch in Halton output dimensions: expected ' ...
+        '%d,got %d.'],expected_cols,actual_cols);
 end
     
-H = reshape(hp',dimensions,draws,N);  % dimensions × draws × N
-H = permute(H,[3,1,2]);               % N × dimensions × draws
+H = reshape(hp',dimensions,draws,N); % dimensions x draws x N
+H = permute(H,[3,1,2]); % N x dimensions x draws
 
 %% Transform to standard normal
 if nargout >= 2
-    Z = norminv(H);  % Requires Statistics and Machine Learning Toolbox
+    Z = norminv(H); % Requires Statistics and Machine Learning Toolbox
 end
