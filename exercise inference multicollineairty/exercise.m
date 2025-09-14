@@ -100,3 +100,4 @@ legend('No correlation','Almost perfect correlation')
 ylabel('Density')
 xlabel('B\_hat\_1\_SE') 
 hold off
+
