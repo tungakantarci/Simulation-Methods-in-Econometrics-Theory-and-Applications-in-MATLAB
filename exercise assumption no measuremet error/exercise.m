@@ -1,4 +1,4 @@
-% Exercise - Understanding measurement error bias using simulation
+% Exercise - Understanding measurement error using simulation
 
 %% 1. Aim of the exercise
 % To learn how measurement error leads to a biased OLS estimate.
@@ -23,10 +23,10 @@ B_true = 0.5;
 % 3.5. Create the systematic component of the regression
 X = random("Uniform",-1,1,[N_obs 1]);
 
-% 3.6. Level of mesurement error in terms of the std. dev. of random noise
+% 3.6. Level of measurement error in terms of the SD of random noise
 mesurement_error_level = 0:0.1:1;
 
-%% 4. Loop
+%% 4. Nested for loops for simulation and measurement error level
 
 % 4.1. Preallocate matrix to store OLS coefficient estimates
 B_hat = NaN(N_sim,1);
@@ -37,10 +37,10 @@ B_hat_error_level = NaN(N_sim,1,length(mesurement_error_level));
 % 4.2. Preallocate matrix to store estimation bias
 B_hat_bias = NaN(N_sim,1);
 
-% 4.3. Preallocate matrix to store estimatiion bias across mes. err. levels
+% 4.3. Preall. matrix to store estimation bias across mes. err. levels
 B_hat_bias_error_level = NaN(N_sim,length(mesurement_error_level)); 
 
-% 4.5. Nested for loops for measurement level and simulation
+% 4.5. Nested for loops for simulation and measurement error level
 for j = 1:length(mesurement_error_level)
     X_with_measurement_error = X+random('Normal',0,1,[N_obs 1]) ...
         *sqrt(mesurement_error_level(j)); 
