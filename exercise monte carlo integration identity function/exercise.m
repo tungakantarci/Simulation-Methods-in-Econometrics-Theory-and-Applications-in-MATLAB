@@ -1,9 +1,10 @@
 % Exercise - Monte Carlo integration of identity function
 
 %% 1. Aim of the exercise
-% The aim of this exercise is to understand Monte Carlo integration by
-% estimating the area under the identity function on the interval from 0 to
-% 1 using random samples.
+% This exercise introduces Monte Carlo integration by estimating the area
+% under the identity function f(x) = x over the interval [0, 1] using
+% randomly sampled points. The goal is to illustrate probabilistic
+% approximation of definite integrals.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
@@ -24,7 +25,7 @@ uniform_samples = random('Uniform',0,1,[N_samples 1]);
 % 4.2. MC estimate of the integral of f(x) = x over [0,1]
 integral_estimate = mean(uniform_samples);
 
-%% 5. The true value of the integral of the identity function over [0,1]
+%% 5. Set the true value of the integral of the identity function
 
 % 5.1. Set the true value of the integral
 integral_true_value = 0.5; 
@@ -81,7 +82,7 @@ ylabel('Integral estimate');
 legend('show');
 hold off
 
-% 8.3. Plot how the MSE decreases with more samples (log-log scale)
+% 8.2. Plot how the MSE decreases with more samples (log-log scale)
 figure
 hold on
 loglog(1:N_samples,convergence_MSE, ...
