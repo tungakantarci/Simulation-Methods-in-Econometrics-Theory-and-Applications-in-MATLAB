@@ -40,7 +40,8 @@ seasonal_effect = (1/3)*cos((2*pi/365).*t_sample-pi/6)+1;
 growth = exp(t_sample./1000);
 
 % 5.3. Quantity function: depends on inputs and seasonal effects
-q_function = (80-0.05.*x_sample.*seasonal_effect-0.08.*y_sample).*growth;
+q_function = (80-0.05.*x_sample.*seasonal_effect-0.08.*y_sample) ...
+    .*growth;
 
 % 5.4. Inflation adjustment: compound interest model
 inflation = (1+0.02/365).^t_sample;
