@@ -16,7 +16,7 @@ clear;
 % 3.2. Number of random samples to estimate the integral
 N_samples = 1000; 
 
-%% 4. Monte Carlo integration: Estimating integrals via sampling
+%% 4. Monte Carlo integration: Estimating the integral via sampling
 
 % 4.1. Generate random samples from a standard normal distribution
 standard_normal_samples = random('Normal',0,1,[N_samples 1]);
@@ -29,28 +29,35 @@ integral_estimate = sqrt(2*pi)*mean(unnormalized_gaussian);
 
 %% 5. Set the true value of the integral of the identity function
 
-% 5.1. Set the true value of the integral
+% Set the true value of the integral
 integral_true_value = sqrt(pi); 
 
-%% 6. Convergence behavior of the MC integral estimate
+%% 6. Monte Carlo estimation error: Mean Squared Error (MSE)
 
-% 6.1. Track how the estimate evolves with more samples
+% Compute the squared error of the Monte Carlo estimate
+MSE = (integral_estimate-integral_true_value)^2;
+
+%% 7. Convergence behavior of the MC integral estimate
+
+% 7.1. Track how the estimate evolves with more samples
 convergence_integral_estimate = ...
     cumsum(sqrt(2*pi).*unnormalized_gaussian)./(1:N_samples)';
 
-% 6.2. Track how the mean squared error (MSE) evolves with more samples
+% 7.2. Track how the mean squared error (MSE) evolves with more samples
+% convergence_MSE = ...
+%    cumsum((sqrt(2*pi).*unnormalized_gaussian- ...
+%    integral_true_value).^2)./(1:N_samples)';
 convergence_MSE = ...
-    cumsum((sqrt(2*pi).*unnormalized_gaussian- ...
-    integral_true_value).^2)./(1:N_samples)';
+    (convergence_integral_estimate-integral_true_value).^2;
 
-%% 7. Convergence behavior of the Monte Carlo integral estimate
+%% 8. Convergence behavior of the Monte Carlo integral estimate
 
-% 7.1. Theoretical benchmark
+% 8.1. Theoretical benchmark
 theoretical_error_decay = 1./sqrt(1:N_samples);
 
-%% 8. Visualize convergence of the MC estimate and its error
+%% 9. Visualize convergence of the MC estimate and its error
 
-% 8.1. Plot how the Monte Carlo estimate converges to the true value
+% 9.1. Plot how the Monte Carlo estimate converges to the true value
 figure
 hold on
 plot(1:N_samples,convergence_integral_estimate, ...
@@ -63,7 +70,7 @@ ylabel('Integral estimate');
 legend('show');
 hold off
 
-% 8.2. Plot how the MSE decreases with more samples (log-log scale)
+% 9.2. Plot how the MSE decreases with more samples (log-log scale)
 figure
 hold on
 loglog(1:N_samples,convergence_MSE, ...
