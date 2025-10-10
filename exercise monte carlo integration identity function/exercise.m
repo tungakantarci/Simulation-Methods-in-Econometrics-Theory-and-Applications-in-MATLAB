@@ -61,8 +61,7 @@ hold off
 convergence_integral_estimate = cumsum(uniform_samples)./(1:N_samples)';
 
 % 7.2. Track how the mean squared error (MSE) evolves with more samples
-convergence_MSE = cumsum((uniform_samples-integral_true_value).^2) ...
-    ./(1:N_samples)';
+convergence_MSE = (convergence_integral_estimate-integral_true_value).^2;
 
 % 7.3. Theoretical benchmark
 theoretical_error_decay = 1./sqrt(1:N_samples);
