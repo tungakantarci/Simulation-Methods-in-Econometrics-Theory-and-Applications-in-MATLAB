@@ -30,17 +30,22 @@ integral_estimate = mean(uniform_samples);
 % 5.1. Set the true value of the integral
 integral_true_value = 0.5; 
 
-%% 6. Geometric interpretation of Monte Carlo integration
+%% 6. Monte Carlo estimation error: Mean Squared Error (MSE)
 
-% 6.1 Create (x, y) points uniformly in the unit square
+% 6.1. Compute the squared error of the Monte Carlo estimate
+MSE = (integral_estimate-integral_true_value)^2;
+
+%% 7. Geometric interpretation of Monte Carlo integration
+
+% 7.1 Create (x, y) points uniformly in the unit square
 x_samples = uniform_samples; % x-coordinates sampled uniformly in [0,1]
 y_samples = random('Uniform',0,1, ...
     [N_samples 1]); % y-coordinates sampled independently in [0,1]
 
-% 6.2. Identify points below the diagonal y < x
+% 7.2. Identify points below the diagonal y < x
 below_diagonal = y_samples < x_samples; 
 
-% 6.3. Visualizing area estimation via Monte Carlo sampling
+% 7.3. Visualizing area estimation via Monte Carlo sampling
 figure
 hold on
 scatter(x_samples,y_samples, ...
@@ -55,20 +60,20 @@ ylabel('y')
 legend('show')
 hold off
 
-%% 7. Convergence behavior of the Monte Carlo integral estimate
+%% 8. Convergence behavior of the Monte Carlo integral estimate
 
-% 7.1. Track how the estimate evolves with more samples
+% 8.1. Track how the estimate evolves with more samples
 convergence_integral_estimate = cumsum(uniform_samples)./(1:N_samples)';
 
-% 7.2. Track how the mean squared error (MSE) evolves with more samples
+% 8.2. Track how the mean squared error (MSE) evolves with more samples
 convergence_MSE = (convergence_integral_estimate-integral_true_value).^2;
 
-% 7.3. Theoretical benchmark
+% 8.3. Theoretical benchmark
 theoretical_error_decay = 1./sqrt(1:N_samples);
 
-%% 8. Visualize convergence of the Monte Carlo estimate and its error
+%% 9. Visualize convergence of the Monte Carlo estimate and its error
 
-% 8.1. Plot how the Monte Carlo estimate converges to the true value
+% 9.1. Plot how the Monte Carlo estimate converges to the true value
 figure
 hold on
 plot(1:N_samples,convergence_integral_estimate, ...
@@ -81,7 +86,7 @@ ylabel('Integral estimate');
 legend('show');
 hold off
 
-% 8.2. Plot how the MSE decreases with more samples (log-log scale)
+% 9.2. Plot how the MSE decreases with more samples (log-log scale)
 figure
 hold on
 loglog(1:N_samples,convergence_MSE, ...
