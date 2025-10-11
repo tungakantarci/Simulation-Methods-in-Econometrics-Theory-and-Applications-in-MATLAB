@@ -1,9 +1,8 @@
 % Exercise – Understanding Monte Carlo integration using a profit function
 
 %% 1. Aim of the exercise
-% To estimate the total profit over a simulated volume using Monte Carlo
-% (MC) integration. The profit depends on time, seasonal effects,
-% inflation, and input variables such as x and y.
+% The aim of this exercise is to estimate the total profit of a firm using
+% Monte Carlo (MC) integration.
 
 %% 2. Theory
 % Refer to the accompanying PDF file for the theoretical background on the
