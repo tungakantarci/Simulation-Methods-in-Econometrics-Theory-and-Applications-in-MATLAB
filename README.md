@@ -7,3 +7,4 @@
 7. To download the .m and PDF files, first click on a file and then click on the download button at the upper-right panel of the page.
 8. Some of the exercises presented on this page are a collaborative effort. Contributors of an exercise are listed in the PDF file of that exercise. The contributors include Elisabeth Beusch, Akash Boelens, Jesper Eizenga, Hartog Horsch, Renata-Maria Istrătescu, Tunga Kantarcı, Quinten Salomons, Simonas Stravinskas, Jelmer Weiringa and Axel Zoons. To enhance clarity and readability, we used Microsoft Copilot to assist with language refinement. All ideas, methods, and instructional design are entirely our own.
 9. If you find this project useful, giving it a ⭐ can help others discover it.
+10. This book has been accepted into the MathWorks Book Program under Project ID: BP-103402.
