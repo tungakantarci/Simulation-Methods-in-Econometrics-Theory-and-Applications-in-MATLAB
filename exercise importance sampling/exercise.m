@@ -191,11 +191,16 @@ PDF_prop_gamma = pdf(pd_prop_gamma,x_pos);
 % 11.13. Create comparison plot
 figure
 hold on
-plot(x,PDF_target_norm,':','DisplayName','Target: N(0,1)');
-xline(z_thresh,':','DisplayName','z\_thresh');
-plot(x,PDF_prop_norm,'DisplayName','Proposal: N(z\_thresh,0.5)');
-plot(x_trunc,PDF_prop_trunc_norm,'DisplayName','Proposal: TruncNorm(z\_thresh,1)');
-plot(x_pos,PDF_prop_gamma,'DisplayName','Proposal: Gamma(5,0.5)');
+plot(x,PDF_target_norm,':', ...
+    'DisplayName','Target: N(0,1)');
+xline(z_thresh,':', ...
+    'DisplayName','z\_thresh');
+plot(x,PDF_prop_norm, ...
+    'DisplayName','Proposal: N(z\_thresh,0.5)');
+plot(x_trunc,PDF_prop_trunc_norm, ...
+    'DisplayName','Proposal: TruncNorm(z\_thresh,1)');
+plot(x_pos,PDF_prop_gamma, ...
+    'DisplayName','Proposal: Gamma(5,0.5)');
 title('Fig. 2. Target vs. proposal PDFs');
 xlabel('z');
 ylabel('PDF');
@@ -248,9 +253,12 @@ PDF_prop_gamma = pdf(pd_prop_gamma,x_pos);
 % 12.15. Create likelihood ratio plot
 figure
 hold on
-plot(x,PDF_target_norm./PDF_prop_norm,'DisplayName','Norm(2,0.5)');
-plot(x_trunc,PDF_target_trunc_norm./PDF_prop_trunc_norm,'DisplayName','TruncNorm(z\_thresh,1)');
-plot(x_pos,PDF_target_pos_norm./PDF_prop_gamma,'DisplayName','Gamma(5,1)');
+plot(x,PDF_target_norm./PDF_prop_norm, ...
+    'DisplayName','Norm(2,0.5)');
+plot(x_trunc,PDF_target_trunc_norm./PDF_prop_trunc_norm, ...
+    'DisplayName','TruncNorm(z\_thresh,1)');
+plot(x_pos,PDF_target_pos_norm./PDF_prop_gamma, ...
+    'DisplayName','Gamma(5,1)');
 xline(z_thresh,':','DisplayName','z\_thresh');
 xlim([0 5]); % xlim([-5 10]) is the full domain, including symmetric region
 ylim([0 1]); % Rescale y-axis to reveal structure
