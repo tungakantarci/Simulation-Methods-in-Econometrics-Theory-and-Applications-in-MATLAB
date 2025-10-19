@@ -71,7 +71,7 @@ Z_samples = random('Normal',mu,sigma,[N_samples 1]);
 % 7.2. Estimate tail probability using indicator function
 int_est_mc = mean(Z_samples >= z_thresh); % Estimate of P(Z >= z_thresh)
 
-% 7.3. Compute MSE of the Monte Carlo estimate
+% 7.3. Compute MSE of the Monte Carlo estimator
 MSE_mc = 1/(N_samples*(N_samples-1)) * ...
     sum(((Z_samples >= z_thresh)-int_est_mc).^2); % Equal to variance since estimator is unbiased
 
@@ -220,8 +220,7 @@ pd_target_norm = makedist('Normal','mu',0,'sigma',1);
 PDF_target_norm = pdf(pd_target_norm,x);
 
 % 12.6. Evaluate Standard Normal PDF over truncated grid
-PDF_target_trunc_norm = pdf(pd_target_norm,x_trunc);
-
+PDF_target_trunc_norm = pdf(pd_target_norm,x_trunc);2
 % 12.7. Evaluate Standard Normal PDF over positive grid
 PDF_target_pos_norm = pdf(pd_target_norm,x_pos);
 
@@ -234,8 +233,8 @@ PDF_prop_norm = pdf(pd_prop_norm,x);
 % 12.10. Create base Normal distribution for truncation
 pd_base_trunc_norm = makedist('Normal','mu',3,'sigma',0.5);
 
-% 12.11. Truncate base Normal distribution to [z_thresh, ∞)
-pd_prop_trunc_norm = truncate(pd_base_trunc_norm,3,inf);
+% 12.11. Truncate base Normal distribution to [z_thresh, inf)
+pd_prop_trunc_norm = truncate(pd_base_trunc_norm,z_thresh,inf);
 
 % 12.12. Evaluate Truncated Normal proposal PDF over truncated grid
 PDF_prop_trunc_norm = pdf(pd_prop_trunc_norm,x_trunc);
