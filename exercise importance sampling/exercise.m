@@ -61,7 +61,7 @@ int_true_value = 1-cdf('Normal',z_thresh,mu,sigma);
 %% 6. Define number of samples
 
 % Number of random samples to estimate the integral
-N_samples = 10000; 
+N_samples = 10000;
 
 %% 7. Monte Carlo integration using standard sampling
 
