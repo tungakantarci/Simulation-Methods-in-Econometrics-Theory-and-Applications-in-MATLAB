@@ -1,4 +1,4 @@
-% Exercise - Understanding importance sampling
+% Exercise - Understanding importance sampling using MC integration
 
 %% 1. Aim of the exercise
 % The aim of this exercise is to understand importance sampling in the 
@@ -187,7 +187,7 @@ pd_prop_trunc_norm = truncate(pd_base_trunc_norm,z_thresh,inf);
 % 11.10. Evaluate Truncated Normal PDF over truncated grid
 PDF_prop_trunc_norm = pdf(pd_prop_trunc_norm,x_trunc);
 
-% 11.11. Create Gamma proposal distribution with shape = 5, scale = 0.5
+% 11.11. Create Gamma proposal distribution
 pd_prop_gamma = makedist('Gamma',5,0.5);
 
 % 11.12. Evaluate Gamma proposal PDF over positive grid
@@ -240,7 +240,7 @@ PDF_target_trunc_norm = pdf(pd_target_norm,x_trunc);
 % 12.7. Evaluate Standard Normal PDF over positive grid
 PDF_target_pos_norm = pdf(pd_target_norm,x_pos);
 
-% 12.8. Create Normal proposal distribution N(2,0.5)
+% 12.8. Create Normal proposal distribution
 pd_prop_norm = makedist('Normal','mu',2,'sigma',0.5);
 
 % 12.9. Evaluate Normal proposal PDF over full grid
@@ -255,7 +255,7 @@ pd_prop_trunc_norm = truncate(pd_base_trunc_norm,z_thresh,inf);
 % 12.12. Evaluate Truncated Normal proposal PDF over truncated grid
 PDF_prop_trunc_norm = pdf(pd_prop_trunc_norm,x_trunc);
 
-% 12.13. Create Gamma proposal distribution Gamma(5,1)
+% 12.13. Create Gamma proposal distribution
 pd_prop_gamma = makedist('Gamma',5,1);
 
 % 12.14. Evaluate Gamma proposal PDF over positive grid
