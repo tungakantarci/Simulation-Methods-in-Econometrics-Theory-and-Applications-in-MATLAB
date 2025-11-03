@@ -1,4 +1,4 @@
-% Exercise - Understanding importance sampling using MC integration
+% Exercise - Understanding importance sampling using tail probability
 
 %% 1. Aim of the exercise
 % The aim of this exercise is to understand importance sampling in the 
@@ -7,32 +7,32 @@
 %% 2. Theory
 % Refer to the accompanying PDF file for the theory.
 
-%% 3. Define threshold for tail probability
+%% 3. Clear the memory
 
-% 3.1. Clear the memory 
+% Clear the memory 
 clear;
-
-% 3.2. Define threshold for tail probability
-z_thresh = 1.96;
 
 %% 4. Define and plot tail probability region
 
 % 4.1. Define evaluation grid centered at z_thresh
 z_base = -5:0.1:5;
 
-% 4.2. Ensure z_thresh is included and grid is sorted
-z = unique([z_base, z_thresh]); 
+% 4.2. Define threshold for tail probability
+z_thresh = 1.96;
 
-% 4.3. Define Standard Normal distribution
-pd_base_trunc_norm = makedist('Normal','mu',0,'sigma',1);
+% 4.3. Ensure z_thresh is included and grid is sorted
+z = unique([z_base,z_thresh]); 
 
-% 4.4. Evaluate PDF over the grid
-PDF_target_norm = pdf(pd_base_trunc_norm,z);
+% 4.4. Define Standard Normal distribution
+pd_base_norm = makedist('Normal','mu',0,'sigma',1);
 
-% 4.5. Region to highlight where z is at least z_thresh
+% 4.5. Evaluate PDF over the grid
+PDF_target_norm = pdf(pd_base_norm,z);
+
+% 4.6. Region to highlight where z is at least z_thresh
 z_tail = z >= z_thresh;
 
-% 4.6. Plot Standard Normal PDF and highlight tail region
+% 4.7. Plot Standard Normal PDF and highlight tail region
 figure
 hold on
 plot(z,PDF_target_norm, ...
@@ -74,13 +74,13 @@ N_samples = 10000;
 Z_samples = random('Normal',mu,sigma,[N_samples 1]);
 
 % 7.2. Estimate tail probability using indicator function
-int_est_mc = mean(Z_samples >= z_thresh); % Estimate of P(Z >= z_thresh)
+int_est_mc = mean(Z_samples >= z_thresh);
 
 % 7.3. Compute MSE of the Monte Carlo estimator
 MSE_mc = 1/(N_samples*(N_samples-1)) * ...
-    sum(((Z_samples >= z_thresh)-int_est_mc).^2); % Equal to variance since estimator is unbiased
+    sum(((Z_samples >= z_thresh)-int_est_mc).^2);
 
-%% 8. Importance sampling using Normal proposal
+%% 8. Importance sampling integration using Normal proposal
 
 % 8.1. Define location parameter of Normal proposal
 mu = 2;
@@ -93,16 +93,16 @@ norm_samples = random('Normal',mu,sigma,[N_samples 1]);
 
 % 8.4. Compute importance weights: target density/proposal density
 weights_norm = ...
-    normpdf(norm_samples,0,1)./ ... % Standard Normal evaluated at each sample
+    normpdf(norm_samples,0,1)./ ... % Stand. Normal evaluated at each sample
     normpdf(norm_samples,mu,sigma); % Normal at each sample
 
 % 8.5. Estimate tail probability via importance sampling
 int_est_is_norm = mean(weights_norm.*(norm_samples >= z_thresh));
 
 % 8.6. Compute MSE of the importance sampling estimator
-MSE_norm = var(weights_norm.*(norm_samples >= z_thresh))/N_samples; % Variance of weights divided by sample size
+MSE_norm = var(weights_norm.*(norm_samples >= z_thresh))/N_samples;
 
-%% 9. Importance sampling using Truncated Normal proposal
+%% 9. Importance sampling integration using Truncated Normal proposal
 
 % 9.1. Define location parameter of Normal proposal
 mu = 3;
@@ -121,16 +121,16 @@ trunc_norm_samples = random(pd_prop_trunc_norm,[N_samples 1]);
 
 % 9.6. Compute importance weights
 weights_trunc_norm = ...
-    normpdf(trunc_norm_samples,0,1)./ ... % Standard Normal
-    pdf(pd_base_trunc_norm,trunc_norm_samples); % Truncated Normal
+    normpdf(trunc_norm_samples,0,1)./ ...
+    pdf(pd_base_trunc_norm,trunc_norm_samples);
 
 % 9.7. Estimate tail probability via importance sampling
-int_est_is_trunc_norm = mean(weights_trunc_norm); % All samples are >= z_thresh, so no indicator needed
+int_est_is_trunc_norm = mean(weights_trunc_norm); 
 
 % 9.8. Compute MSE of the importance sampling estimator
 MSE_trunc_norm = var(weights_trunc_norm)/N_samples;
 
-%% 10. Importance sampling using Gamma proposal
+%% 10. Importance sampling integration using Gamma proposal
 
 % 10.1. Define shape parameter of Gamma proposal
 alpha = 5;
@@ -276,7 +276,7 @@ plot(x_pos,PDF_target_pos_norm./PDF_prop_gamma, ...
 xline(z_thresh,':', ...
     'Color',[0.0000 0.0000 0.0000], ...
     'DisplayName','z\_thresh');
-xlim([0 5]); % xlim([-5 10]) is the full domain, including symmetric region
+xlim([0 5]); % xlim([-5 10]) is full domain, including symmetric region
 ylim([0 1]); % Rescale y-axis to reveal structure
 title('Fig. 3. Likelihood ratios: Target / Proposal');
 xlabel('z');
