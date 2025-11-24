@@ -1,7 +1,10 @@
 % Exercise - Understanding the theory of importance sampling
 
 %% 1. Aim of the exercise
-% Text.
+
+% The aim of this exercise is to understand the role of tail behaviour in
+% importance sampling, by comparing proposal and target distributions and
+% observing how heavier tails help ensure finite variance of the estimator.
 
 %% 2. Tails comparison
 
@@ -20,14 +23,14 @@ PD_Cauchy = makedist('tLocationScale','mu',0,'sigma',1,'nu',1);
 % 2.5. Title
 PDF_Cauchy = pdf(PD_Cauchy,x_values);
 
-%% Plot the theoretical PDFs
+%% 3. Plot the theoretical PDFs
 
 % Plot
 figure
 hold on
 plot(x_values,PDF_Normal,'DisplayName','N(0,1)')
 plot(x_values,PDF_Cauchy,'DisplayName','Cauchy(0,1)')
-title('Fig. 1. Title')
+title('Fig. 1. Importance sampling PDF tails')
 xlabel('x')
 ylabel('PDF')
 legend('show');
