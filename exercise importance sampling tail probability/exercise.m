@@ -2,8 +2,9 @@
 
 %% 1. Aim of the exercise
 
-% The aim of this exercise is to understand importance sampling in the 
-% context of reducing variance of Monte Carlo (MC) integration.
+% The aim of this exercise is to undersand importance sampling as a
+% technique for reducing the variance of Monte Carlo integration
+% estimators.
 
 %% 2. Theory
 
@@ -68,7 +69,7 @@ int_true_value = 1-cdf('Normal',z_thresh,mu,sigma);
 %% 6. Define number of samples
 
 % Number of random samples to estimate the integral
-N_samples = 1000;
+N_samples = 100000;
 
 %% 7. Monte Carlo integration using standard sampling
 
@@ -220,7 +221,7 @@ ylabel('PDF');
 legend('show');
 hold off
 
-%% 12. Compare likelihood ratios: Target/Proposal
+%% 12. Compare likelihood ratios
 
 % 12.1. Define evaluation grid
 x = -5:0.1:10;
