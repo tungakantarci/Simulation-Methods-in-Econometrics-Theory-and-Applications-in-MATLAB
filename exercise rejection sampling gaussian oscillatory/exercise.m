@@ -65,17 +65,21 @@ C = c*(3-(-3));
 
 % Create new figure
 figure
+set(gcf,'Position',[100,100,1000,1000]); 
+
 hold on
+% Plot the target function (blue curve)
 plot(x,target_function, ...
     'Color','blue', ...
     'DisplayName','Target function')
 plot(x,proposal_uniform_PDF, ...
     'DisplayName','Proposal PDF')
+% Plot the scaled proposal distribution (black curve)
 plot(x,C*proposal_uniform_PDF, ...
     'Color','black', ...
     'DisplayName','Scaled proposal PDF')
 plot(-4:-3,[max(target_function) max(target_function)],'--', ...
-    'DisplayName','Max target function') % Horizontal reference line at max(target_function)
+    'DisplayName','Max target function')
 xline(-1.2,'--', ...
     'DisplayName','Reference x = -1.2')
 f_Value = target_function((-1.2+4)/0.01); % Intersection point f(-1.2)
@@ -127,6 +131,8 @@ end
 
 % Create new figure
 figure
+set(gcf,'Position',[100,100,1000,1000]); 
+
 hold on
 % Plot the target function (blue curve)
 plot(x,target_function, ...
@@ -144,7 +150,6 @@ scatter(region_blue(:,1),region_blue(:,2),10, ...
 scatter(region_black(:,1),region_black(:,2),10, ...
     'MarkerEdgeColor','black','MarkerFaceColor','black', ...
     'DisplayName','Rejected samples')
-% Add title and axis label
 title('Fig. 2. Accepted vs Rejected Samples in Rejection Sampling')
 xlabel('x')
 legend('show')
@@ -166,12 +171,14 @@ C_N = 9;
 
 % Create new figure
 figure
+set(gcf,'Position',[100,100,1000,1000]); 
+
 hold on
 % Plot the target function (blue curve)
 plot(x,target_function, ...
     'Color','blue', ...
     'DisplayName','Target function')
-% Plot the scaled standard normal proposal distribution (black curve)
+% Plot the scaled proposal distribution (black curve)
 plot(x,C_N*proposal_standard_normal_PDF, ...
     'Color','black', ...
     'DisplayName','Scaled proposal')
@@ -232,6 +239,8 @@ end
 
 % 13.1. Create a new figure window
 figure
+set(gcf,'Position',[100,100,1000,1000]); 
+
 hold on
 % Plot the target function (blue curve)
 plot(x,target_function, ...
