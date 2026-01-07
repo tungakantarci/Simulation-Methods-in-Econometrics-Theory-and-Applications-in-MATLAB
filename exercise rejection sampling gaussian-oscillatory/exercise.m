@@ -92,37 +92,35 @@ hold off
 
 %% 8. Determine accepted and rejected samples
 
-% 8.2. Generate uniform random points in 2D (x and auxiliary dimension)
-uniform_points = random('Uniform',-3,3,[N_samples 2]);
+% 8.1. Generate x-coordinates from the uniform proposal on [-3,3]
+proposal_samples = random('Uniform',-3,3,[N_samples 1]);
 
-% 8.3. Scale the second coordinate to match the envelope height
-uniform_points_scaled = (c/3)*abs(uniform_points(:,2));
+% 8.2. Generate U ~ Unif(0,1) for vertical placement
+u_samples = random('Uniform',0,1,[N_samples 1]);
 
-% 8.4. Combine x-coordinates with scaled y-coordinates
-uniform_points_combined = [uniform_points(:,1) ...
-    uniform_points_scaled(:,1)];
+% 8.3. Compute corresponding y-coordinates scaled by envelope height
+y_coordinates = u_samples .* (C * pdf(proposal_uniform_PD, proposal_samples));
 
-% 8.5. Preallocate matrix for accepted points (below target function)
-region_blue = NaN(N_samples,2);
+% 8.4. Combine x- and y-coordinates
+proposal_points_scaled = [proposal_samples y_coordinates];
 
-% 8.6. Preallocate matrix for rejected points (above target function)
-region_black = NaN(N_samples,2);
+% 8.5. Preallocate matrices for accepted and rejected points
+accepted_samples = NaN(N_samples,2);
+rejected_samples = NaN(N_samples,2);
 
-% 8.7. Classify each sample as accepted (blue) or rejected (black)
+% 8.6. Classify each sample
 for j = 1:N_samples
-    x_coordinate = uniform_points_combined(j,1);
-    y_coordinate = uniform_points_combined(j,2);
+    x_coordinate = proposal_points_scaled(j,1);
+    y_coordinate = proposal_points_scaled(j,2);
     % Find index in x-values for target_function(x_coordinate)
-    find_index = (abs(min(x))+x_coordinate)/0.001; 
-    index = int16(find_index)+1; % Adjust for round-off error
+    find_index = (abs(min(x)) + x_coordinate) / 0.001;
+    index = int16(find_index) + 1; % Adjust for round-off error
     if y_coordinate <= target_function(index)
-        % Accepted sample: point lies below target function
-        region_blue(j,1) = x_coordinate;
-        region_blue(j,2) = y_coordinate;
+        % Accepted sample
+        accepted_samples(j,:) = [x_coordinate, y_coordinate];
     else
-        % Rejected sample: point lies above target function
-        region_black(j,1) = x_coordinate;
-        region_black(j,2) = y_coordinate;
+        % Rejected sample
+        rejected_samples(j,:) = [x_coordinate, y_coordinate];
     end
 end
 
@@ -140,11 +138,11 @@ plot(x,C*proposal_uniform_PDF, ...
     'Color','black', ...
     'DisplayName','Scaled proposal')
 % Plot accepted points (below target function, blue dots)
-scatter(region_blue(:,1),region_blue(:,2),10, ...
+scatter(accepted_samples(:,1),accepted_samples(:,2),10, ...
     'MarkerEdgeColor','blue','MarkerFaceColor','blue', ...
     'DisplayName','Accepted samples')
 % Plot rejected points (above target function, black dots)
-scatter(region_black(:,1),region_black(:,2),10, ...
+scatter(rejected_samples(:,1),rejected_samples(:,2),10, ...
     'MarkerEdgeColor','black','MarkerFaceColor','black', ...
     'DisplayName','Rejected samples')
 title('Fig. 2. Accepted vs Rejected Samples in Rejection Sampling')
@@ -185,48 +183,38 @@ hold off
 %% 12. Determine accepted and rejected samples
 
 % 12.1. Generate x-coordinates (realizations from N(0,1))
-standard_normal_realizations = random('Normal',0,1,[N_samples 1]);  
+proposal_samples = random('Normal',0,1,[N_samples 1]);  
 
 % 12.2. Compute corresponding y-coordinates
-standard_normal_points = (1/sqrt(2*pi)) * ...
-    exp(-0.5 * standard_normal_realizations.^2);
+proposal_pdf_values = (1/sqrt(2*pi)) * ...
+    exp(-0.5 * proposal_samples.^2);
 
-% 12.3. Generate uniform scaling factors in [0,1] to spread points 
-% vertically
-uniform_scaling = random('Uniform',0,1,[N_samples 1]);
+% 12.3. Generate uniform scaling factors in [0,1] to spread points vertically
+u_samples = random('Uniform',0,1,[N_samples 1]);
 
 % 12.4. Define envelope constant (from Section 10)
 c = C_N;
 
 % 12.5. Scale y-coordinates by envelope constant and uniform factor
-standard_normal_points_scaled = [standard_normal_realizations ...
-    c * uniform_scaling .* standard_normal_points];
+proposal_points_scaled = [proposal_samples ...
+    c * u_samples .* proposal_pdf_values];
 
 % 12.6. Preallocate matrix for accepted points (below target function)
-region_blue = zeros(N_samples,2);
+accepted_samples = NaN(N_samples,2);
 
 % 12.7. Preallocate matrix for rejected points (above target function)
-region_black = zeros(N_samples,2);
+rejected_samples = NaN(N_samples,2);
 
 % 12.8. Loop through all samples and classify each point
 for k = 1:N_samples
-    % Extract x- and y-coordinates of the k-th sample
-    x_coordinate = standard_normal_points_scaled(k,1);
-    y_coordinate = standard_normal_points_scaled(k,2);
-    % Find index in x-values corresponding to x_coordinate
+    x_coordinate = proposal_points_scaled(k,1);
+    y_coordinate = proposal_points_scaled(k,2);
     find_index = (abs(min(x)) + x_coordinate) / 0.001; 
     index = int16(find_index) + 1; % Adjust for round-off error
-    % Compare y-coordinate with target function value at this x
     if y_coordinate <= target_function(index)
-        % Accepted sample: point lies below target function 
-        % (store in blue region)
-        region_blue(k,1) = x_coordinate;
-        region_blue(k,2) = y_coordinate;
+        accepted_samples(k,:) = [x_coordinate, y_coordinate];
     else
-        % Rejected sample: point lies above target function 
-        % (store in black region)
-        region_black(k,1) = x_coordinate;
-        region_black(k,2) = y_coordinate;
+        rejected_samples(k,:) = [x_coordinate, y_coordinate];
     end
 end
 
@@ -244,11 +232,11 @@ plot(x,C_N*proposal_standard_normal_PDF, ...
     'Color','black', ...
     'DisplayName','Scaled proposal')
 % Plot accepted samples (blue dots below target function)
-scatter(region_blue(:,1),region_blue(:,2),10, ...
+scatter(accepted_samples(:,1),accepted_samples(:,2),10, ...
     'MarkerEdgeColor','blue','MarkerFaceColor','blue', ...
     'DisplayName','Accepted samples')
 % Plot rejected samples (black dots above target function)
-scatter(region_black(:,1),region_black(:,2),10, ...
+scatter(rejected_samples(:,1),rejected_samples(:,2),10, ...
     'MarkerEdgeColor','black','MarkerFaceColor','black', ...
     'DisplayName','Rejected samples')
 title('Fig. 4. Accepted vs Rejected Samples with Normal Proposal')
