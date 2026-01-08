@@ -99,7 +99,8 @@ proposal_samples = random('Uniform',-3,3,[N_samples 1]);
 u_samples = random('Uniform',0,1,[N_samples 1]);
 
 % 8.3. Compute corresponding y-coordinates scaled by envelope height
-y_coordinates = u_samples .* (C * pdf(proposal_uniform_PD, proposal_samples));
+y_coordinates = u_samples.* ...
+    (C*pdf(proposal_uniform_PD,proposal_samples));
 
 % 8.4. Combine x- and y-coordinates
 proposal_points_scaled = [proposal_samples y_coordinates];
@@ -189,7 +190,7 @@ proposal_samples = random('Normal',0,1,[N_samples 1]);
 proposal_pdf_values = (1/sqrt(2*pi)) * ...
     exp(-0.5 * proposal_samples.^2);
 
-% 12.3. Generate uniform scaling factors in [0,1] to spread points vertically
+% 12.3. Generate uniform scaling factors to spread points vertically
 u_samples = random('Uniform',0,1,[N_samples 1]);
 
 % 12.4. Define envelope constant (from Section 10)
