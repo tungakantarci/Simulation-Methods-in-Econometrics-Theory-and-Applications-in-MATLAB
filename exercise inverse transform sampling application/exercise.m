@@ -47,14 +47,14 @@ hold off
 %% 7. MATLAB's built-in exponential generator
 
 % Generate exponential sample using MATLAB's built‑in function
-X_builtin = random('Exponential',1/lambda,[N 1]);
+ExponentialRealizationBuiltIn = random('Exponential',1/lambda,[N 1]);
 
 %% 8: Histogram of MATLAB's built‑in exponential sample
 
 % Plot
 figure
 hold on
-histogram(X_builtin,50,'Normalization','pdf', ...
+histogram(ExponentialRealizationBuiltIn,50,'Normalization','pdf', ...
     'EdgeColor',[0.0 0.2 0.4], ...
     'FaceColor',[0.0 0.2 0.4]);
 ylim([0.0 1.2])
@@ -71,14 +71,14 @@ a = 2;
 U = random('Uniform',0,1,[N 1]);
 
 % 9.3. Create the sample that begins at a and extends to infinity
-X_trunc = a-log(1-U);
+TruncExponentialRealization = a-log(1-U);
 
 %% 10. Histogram of truncated exponential sample
 
 % Plot
 figure
 hold on
-histogram(X_trunc,50,'Normalization','pdf', ...
+histogram(TruncExponentialRealization,50,'Normalization','pdf', ...
     'EdgeColor',[0.0 0.2 0.4], ...
     'FaceColor',[0.0 0.2 0.4]);
 ylim([0.0 1.2])
