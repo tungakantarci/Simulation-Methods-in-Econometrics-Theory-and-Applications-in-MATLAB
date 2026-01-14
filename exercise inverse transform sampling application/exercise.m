@@ -17,11 +17,11 @@ clear;
 
 %% 4. Sampling setup
 
-% 4.1. Sample size
+% Sample size
 N = 1000;
 
 %% 5. Sampling from the exponential distribution
-% 
+ 
 % 5.1 Generate N realizations from Uniform(0,1)
 U = random('Uniform',0,1,[N 1]); 
 
